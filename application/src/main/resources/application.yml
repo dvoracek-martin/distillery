@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+#show sql statement
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  banner:
+    location: banner.txt
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/distillery
+    username: admin
+    password: secret
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+
+  jackson:
+    generator:
+      write_numbers_as_strings: true
+    serialization:
+      write_dates_as_timestamps: false
+    deserialization:
+      fail_on_unknown_properties: false
+      fail_on_numbers_for_enums: true
