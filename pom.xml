@@ -65,5 +65,25 @@
         </dependency>
     </dependencies>
 
-
+    <build>
+        <finalName>distillery</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.dvoracek.distillery.application.DistilleryApplication</mainClass>
+                    <addResources>true</addResources>
+                    <classifier>exec</classifier>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

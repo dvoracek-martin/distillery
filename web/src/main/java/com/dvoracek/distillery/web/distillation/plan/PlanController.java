@@ -16,7 +16,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/plans")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:*", allowedHeaders = "*")
 public class PlanController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlanController.class);
