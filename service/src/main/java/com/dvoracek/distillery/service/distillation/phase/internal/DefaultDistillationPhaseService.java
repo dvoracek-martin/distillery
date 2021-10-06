@@ -49,7 +49,10 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
         distillationPhase.setName(createDistillationPhaseDto.getName());
         distillationPhase.setPlan(distillationPlanRepository.findById(createDistillationPhaseDto.getPlanId()).orElseThrow(()
                 -> new DistillationPlanNotFoundException(createDistillationPhaseDto.getPlanId())));
-        distillationPhase.setRule(createDistillationPhaseDto.getRule());
+        distillationPhase.setTemperature(createDistillationPhaseDto.getTemperature());
+        distillationPhase.setFlow(createDistillationPhaseDto.getFlow());
+        distillationPhase.setVolume(createDistillationPhaseDto.getVolume());
+        distillationPhase.setTime(createDistillationPhaseDto.getTime());
         return DistillationPhaseDto.toDistillationPhaseDto(distillationPhaseRepository.save(distillationPhase));
     }
 

@@ -1,18 +1,20 @@
 package com.dvoracek.distillery.service.distillation.plan;
 
+import com.dvoracek.distillery.service.distillation.phase.CreateDistillationPhaseDto;
+
 import java.util.List;
 
 public class CreateDistillationPlanDto {
     private String name;
     private String description;
-    private List<Long> phaseIds;
+    private List<CreateDistillationPhaseDto> distillationPhases;
 
-    public List<Long> getPhaseIds() {
-        return phaseIds;
+    public List<CreateDistillationPhaseDto> getDistillationPhases() {
+        return distillationPhases;
     }
 
-    public CreateDistillationPlanDto setPhaseIds(List<Long> phaseIds) {
-        this.phaseIds = phaseIds;
+    public CreateDistillationPlanDto setDistillationPhases(List<CreateDistillationPhaseDto> distillationPhases) {
+        this.distillationPhases = distillationPhases;
         return this;
     }
 

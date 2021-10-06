@@ -4,7 +4,9 @@ import com.dvoracek.distillery.domain.phase.DistillationPhase;
 import com.dvoracek.distillery.domain.phase.DistillationPhaseRepository;
 import com.dvoracek.distillery.domain.plan.DistillationPlan;
 import com.dvoracek.distillery.domain.plan.DistillationPlanRepository;
+import com.dvoracek.distillery.service.distillation.phase.CreateDistillationPhaseDto;
 import com.dvoracek.distillery.service.distillation.phase.DistillationPhaseNotFoundException;
+import com.dvoracek.distillery.service.distillation.phase.UpdateDistillationPhaseDto;
 import com.dvoracek.distillery.service.distillation.plan.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +42,15 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         distillationPlan.setName(updateDistillationPlanDto.getName());
         distillationPlan.setDescription(updateDistillationPlanDto.getDescription());
         List<DistillationPhase> phases = new ArrayList<>();
-        for (Long phaseId : updateDistillationPlanDto.getPhaseIds()) {
-            this.distillationPhaseRepository.findById(phaseId)
-                    .map(phases::add)
-                    .orElseThrow(() -> new DistillationPhaseNotFoundException(id));
+        for (UpdateDistillationPhaseDto updateDistillationPhaseDto : updateDistillationPlanDto.getDistillationPhases()) {
+            DistillationPhase distillationPhase = distillationPhaseRepository.findById(updateDistillationPhaseDto.getId()).orElseThrow(() -> new DistillationPhaseNotFoundException(id));
+            distillationPhase.setName(updateDistillationPhaseDto.getName());
+            distillationPhase.setVolume(updateDistillationPhaseDto.getVolume());
+            distillationPhase.setFlow(updateDistillationPhaseDto.getFlow());
+            distillationPhase.setTemperature(updateDistillationPhaseDto.getTemperature());
+            distillationPhase.setTime(updateDistillationPhaseDto.getTime());
+            distillationPhase.setPlan(distillationPlan);
+            phases.add(distillationPhase);
         }
         distillationPlan.setDistillationPhases(phases);
         LOGGER.info("Phase updated. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
@@ -58,7 +65,20 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         DistillationPlan distillationPlan = new DistillationPlan();
         distillationPlan.setName(createDistillationPlanDto.getName());
         distillationPlan.setDescription(createDistillationPlanDto.getDescription());
-        return DistillationPlanDto.toDistillationPlanDto(distillationPlanRepository.save(distillationPlan));
+        distillationPlan = distillationPlanRepository.save(distillationPlan);
+        if (!createDistillationPlanDto.getDistillationPhases().isEmpty()) {
+            for (CreateDistillationPhaseDto createDistillationPhaseDto : createDistillationPlanDto.getDistillationPhases()) {
+                DistillationPhase distillationPhase = new DistillationPhase();
+                distillationPhase.setPlan(distillationPlan);
+                distillationPhase.setName(createDistillationPhaseDto.getName());
+                distillationPhase.setTemperature(createDistillationPhaseDto.getTemperature());
+                distillationPhase.setFlow(createDistillationPhaseDto.getFlow());
+                distillationPhase.setVolume(createDistillationPhaseDto.getVolume());
+                distillationPhase.setTime(createDistillationPhaseDto.getTime());
+                distillationPhaseRepository.save(distillationPhase);
+            }
+        }
+        return DistillationPlanDto.toDistillationPlanDto(distillationPlan);
     }
 
     @Override

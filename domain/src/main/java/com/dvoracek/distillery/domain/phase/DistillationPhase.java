@@ -28,7 +28,10 @@ public class DistillationPhase {
     @JsonIgnore
     private DistillationPlan plan;
 
-    private String rule;
+    private String temperature;
+    private String flow;
+    private String volume;
+    private Long time;
 
     public DistillationPlan getPlan() {
         return plan;
@@ -54,16 +57,45 @@ public class DistillationPhase {
         return name;
     }
 
-    public void setName(String name) {
+    public DistillationPhase setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public String getRule() {
-        return rule;
+
+    public String getTemperature() {
+        return temperature;
     }
 
-    public DistillationPhase setRule(String rule) {
-        this.rule = rule;
+    public DistillationPhase setTemperature(String temperature) {
+        this.temperature = temperature;
+        return this;
+    }
+
+    public String getFlow() {
+        return flow;
+    }
+
+    public DistillationPhase setFlow(String flow) {
+        this.flow = flow;
+        return this;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public DistillationPhase setVolume(String volume) {
+        this.volume = volume;
+        return this;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public DistillationPhase setTime(Long time) {
+        this.time = time;
         return this;
     }
 }

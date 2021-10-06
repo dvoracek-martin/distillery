@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/phases")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PhaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhaseController.class);

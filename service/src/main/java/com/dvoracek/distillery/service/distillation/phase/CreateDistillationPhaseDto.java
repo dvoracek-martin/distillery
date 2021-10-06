@@ -2,13 +2,13 @@ package com.dvoracek.distillery.service.distillation.phase;
 
 
 public class CreateDistillationPhaseDto {
-    private Long id;
 
     private String name;
-
     private Long planId;
-
-    private String rule;
+    private String temperature;
+    private String flow;
+    private String volume;
+    private Long time;
 
     public Long getPlanId() {
         return planId;
@@ -16,15 +16,6 @@ public class CreateDistillationPhaseDto {
 
     public CreateDistillationPhaseDto setPlanId(Long planId) {
         this.planId = planId;
-        return this;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public CreateDistillationPhaseDto setId(Long id) {
-        this.id = id;
         return this;
     }
 
@@ -37,12 +28,39 @@ public class CreateDistillationPhaseDto {
         return this;
     }
 
-    public String getRule() {
-        return rule;
+    public String getTemperature() {
+        return temperature;
     }
 
-    public CreateDistillationPhaseDto setRule(String rule) {
-        this.rule = rule;
+    public CreateDistillationPhaseDto setTemperature(String temperature) {
+        this.temperature = temperature;
+        return this;
+    }
+
+    public String getFlow() {
+        return flow;
+    }
+
+    public CreateDistillationPhaseDto setFlow(String flow) {
+        this.flow = flow;
+        return this;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public CreateDistillationPhaseDto setVolume(String volume) {
+        this.volume = volume;
+        return this;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public CreateDistillationPhaseDto setTime(Long time) {
+        this.time = time;
         return this;
     }
 }
