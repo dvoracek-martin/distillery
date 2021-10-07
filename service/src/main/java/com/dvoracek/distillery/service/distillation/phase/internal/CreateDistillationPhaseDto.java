@@ -1,13 +1,13 @@
-package com.dvoracek.distillery.service.distillation.phase;
+package com.dvoracek.distillery.service.distillation.phase.internal;
 
 
 public class CreateDistillationPhaseDto {
 
     private String name;
     private Long planId;
-    private String temperature;
-    private String flow;
-    private String volume;
+    private double temperature;
+    private double flow;
+    private double volume;
     private Long time;
 
     public Long getPlanId() {
@@ -28,29 +28,29 @@ public class CreateDistillationPhaseDto {
         return this;
     }
 
-    public String getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
-    public CreateDistillationPhaseDto setTemperature(String temperature) {
+    public CreateDistillationPhaseDto setTemperature(double temperature) {
         this.temperature = temperature;
         return this;
     }
 
-    public String getFlow() {
+    public double getFlow() {
         return flow;
     }
 
-    public CreateDistillationPhaseDto setFlow(String flow) {
+    public CreateDistillationPhaseDto setFlow(double flow) {
         this.flow = flow;
         return this;
     }
 
-    public String getVolume() {
+    public double getVolume() {
         return volume;
     }
 
-    public CreateDistillationPhaseDto setVolume(String volume) {
+    public CreateDistillationPhaseDto setVolume(double volume) {
         this.volume = volume;
         return this;
     }

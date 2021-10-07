@@ -4,7 +4,7 @@ import com.dvoracek.distillery.domain.phase.DistillationPhase;
 import com.dvoracek.distillery.domain.phase.DistillationPhaseRepository;
 import com.dvoracek.distillery.domain.plan.DistillationPlanRepository;
 import com.dvoracek.distillery.service.distillation.phase.*;
-import com.dvoracek.distillery.service.distillation.plan.DistillationPlanNotFoundException;
+import com.dvoracek.distillery.service.distillation.plan.internal.DistillationPlanNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,7 +51,7 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
                 -> new DistillationPlanNotFoundException(createDistillationPhaseDto.getPlanId())));
         distillationPhase.setTemperature(createDistillationPhaseDto.getTemperature());
         distillationPhase.setFlow(createDistillationPhaseDto.getFlow());
-        distillationPhase.setVolume(createDistillationPhaseDto.getVolume());
+        distillationPhase.setWeight(createDistillationPhaseDto.getVolume());
         distillationPhase.setTime(createDistillationPhaseDto.getTime());
         return DistillationPhaseDto.toDistillationPhaseDto(distillationPhaseRepository.save(distillationPhase));
     }

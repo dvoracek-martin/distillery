@@ -1,4 +1,4 @@
-package com.dvoracek.distillery.service.distillation.phase;
+package com.dvoracek.distillery.service.distillation.phase.internal;
 
 public class DistillationPhaseNotFoundException extends RuntimeException {
     public DistillationPhaseNotFoundException(Long id) {

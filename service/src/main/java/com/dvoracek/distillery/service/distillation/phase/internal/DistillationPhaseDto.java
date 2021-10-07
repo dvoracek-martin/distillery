@@ -1,4 +1,4 @@
-package com.dvoracek.distillery.service.distillation.phase;
+package com.dvoracek.distillery.service.distillation.phase.internal;
 
 
 import com.dvoracek.distillery.domain.phase.DistillationPhase;
@@ -8,9 +8,9 @@ public class DistillationPhaseDto {
     private Long id;
     private String name;
     private Long planId;
-    private String temperature;
-    private String flow;
-    private String volume;
+    private double temperature;
+    private double flow;
+    private double volume;
     private Long time;
 
     public Long getId() {
@@ -31,39 +31,39 @@ public class DistillationPhaseDto {
         return this;
     }
 
-    public String getTemperature() {
-        return temperature;
-    }
-
-    public DistillationPhaseDto setTemperature(String temperature) {
-        this.temperature = temperature;
-        return this;
-    }
-
-    public String getFlow() {
-        return flow;
-    }
-
-    public DistillationPhaseDto setFlow(String flow) {
-        this.flow = flow;
-        return this;
-    }
-
-    public String getVolume() {
-        return volume;
-    }
-
-    public DistillationPhaseDto setVolume(String volume) {
-        this.volume = volume;
-        return this;
-    }
-
     public Long getPlanId() {
         return planId;
     }
 
     public DistillationPhaseDto setPlanId(Long planId) {
         this.planId = planId;
+        return this;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public DistillationPhaseDto setTemperature(double temperature) {
+        this.temperature = temperature;
+        return this;
+    }
+
+    public double getFlow() {
+        return flow;
+    }
+
+    public DistillationPhaseDto setFlow(double flow) {
+        this.flow = flow;
+        return this;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public DistillationPhaseDto setVolume(double volume) {
+        this.volume = volume;
         return this;
     }
 
@@ -82,7 +82,7 @@ public class DistillationPhaseDto {
                 .setName(distillationPhase.getName())
                 .setTemperature(distillationPhase.getTemperature())
                 .setFlow(distillationPhase.getFlow())
-                .setVolume(distillationPhase.getVolume())
+                .setVolume(distillationPhase.getWeight())
                 .setPlanId(distillationPhase.getPlan().getId())
                 .setTime(distillationPhase.getTime());
     }

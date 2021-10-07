@@ -1,6 +1,6 @@
-package com.dvoracek.distillery.service.distillation.plan;
+package com.dvoracek.distillery.service.distillation.plan.internal;
 
-import com.dvoracek.distillery.service.distillation.phase.CreateDistillationPhaseDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.CreateDistillationPhaseDto;
 
 import java.util.List;
 

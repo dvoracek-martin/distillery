@@ -1,9 +1,9 @@
 package com.dvoracek.distillery.web.distillation.phase;
 
-import com.dvoracek.distillery.service.distillation.phase.CreateDistillationPhaseDto;
-import com.dvoracek.distillery.service.distillation.phase.DistillationPhaseDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.CreateDistillationPhaseDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.DistillationPhaseDto;
 import com.dvoracek.distillery.service.distillation.phase.DistillationPhaseService;
-import com.dvoracek.distillery.service.distillation.phase.UpdateDistillationPhaseDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.UpdateDistillationPhaseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -15,36 +15,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/phases")
-@CrossOrigin(origins = "http://localhost:*", allowedHeaders = "*")
-public class PhaseController {
+@RequestMapping(value = "/api/phase")
+@CrossOrigin(origins = "http://localhost:4200")
+public class DistillationPhaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PhaseController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DistillationPhaseController.class);
 
     private final DistillationPhaseService distillationPhaseService;
 
-    public PhaseController(DistillationPhaseService distillationPhaseService) {
+    public DistillationPhaseController(DistillationPhaseService distillationPhaseService) {
         this.distillationPhaseService = distillationPhaseService;
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DistillationPhaseDto getPhase(@PathVariable("id") Long id) {
-        LOGGER.debug("Received Http.GET /api/phases/" + id);
+        LOGGER.debug("Received Http.GET /api/phase/" + id);
         return this.distillationPhaseService.getDistillationPhase(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DistillationPhaseDto updatePhase(@PathVariable("id") Long id, @RequestBody @Validated UpdateDistillationPhaseDto updateDistillationPhaseDto) throws JsonProcessingException {
-        LOGGER.debug("Received Http.PUT /api/phases : {} with an id: {}", new ObjectMapper().writeValueAsString(updateDistillationPhaseDto), id);
+        LOGGER.debug("Received Http.PUT /api/phase/ : {} with an id: {}", new ObjectMapper().writeValueAsString(updateDistillationPhaseDto), id);
         return this.distillationPhaseService.updatePhase(id, updateDistillationPhaseDto);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DistillationPhaseDto createPhase(@RequestBody @Validated CreateDistillationPhaseDto createDistillationPhaseDto) throws JsonProcessingException {
-        LOGGER.debug("Received Http.POST /api/phases : {}", new ObjectMapper().writeValueAsString(createDistillationPhaseDto));
+        LOGGER.debug("Received Http.POST /api/phase/ : {}", new ObjectMapper().writeValueAsString(createDistillationPhaseDto));
         return this.distillationPhaseService.createDistillationPhase(createDistillationPhaseDto);
     }
 
@@ -52,7 +52,7 @@ public class PhaseController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deletePhase(@PathVariable("id") Long id) throws JsonProcessingException {
-        LOGGER.debug("Received Delete Request /api/phases : {}", new ObjectMapper().writeValueAsString(id));
+        LOGGER.debug("Received Delete Request /api/phase/ : {}", new ObjectMapper().writeValueAsString(id));
         this.distillationPhaseService.deleteDistillationPhase(id);
     }
 

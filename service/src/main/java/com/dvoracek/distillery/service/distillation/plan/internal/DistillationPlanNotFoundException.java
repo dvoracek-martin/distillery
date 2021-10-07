@@ -1,4 +1,4 @@
-package com.dvoracek.distillery.service.distillation.plan;
+package com.dvoracek.distillery.service.distillation.plan.internal;
 
 public class DistillationPlanNotFoundException extends RuntimeException {
     public DistillationPlanNotFoundException(Long id) {

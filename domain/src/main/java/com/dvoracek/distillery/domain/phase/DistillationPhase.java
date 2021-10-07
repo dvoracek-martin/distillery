@@ -28,9 +28,9 @@ public class DistillationPhase {
     @JsonIgnore
     private DistillationPlan plan;
 
-    private String temperature;
-    private String flow;
-    private String volume;
+    private double temperature;
+    private double flow;
+    private double weight;
     private Long time;
 
     public DistillationPlan getPlan() {
@@ -62,31 +62,30 @@ public class DistillationPhase {
         return this;
     }
 
-
-    public String getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
-    public DistillationPhase setTemperature(String temperature) {
+    public DistillationPhase setTemperature(double temperature) {
         this.temperature = temperature;
         return this;
     }
 
-    public String getFlow() {
+    public double getFlow() {
         return flow;
     }
 
-    public DistillationPhase setFlow(String flow) {
+    public DistillationPhase setFlow(double flow) {
         this.flow = flow;
         return this;
     }
 
-    public String getVolume() {
-        return volume;
+    public double getWeight() {
+        return weight;
     }
 
-    public DistillationPhase setVolume(String volume) {
-        this.volume = volume;
+    public DistillationPhase setWeight(double weight) {
+        this.weight = weight;
         return this;
     }
 

@@ -1,12 +1,12 @@
-package com.dvoracek.distillery.service.distillation.plan;
+package com.dvoracek.distillery.service.distillation.plan.internal;
 
 
-import com.dvoracek.distillery.service.distillation.phase.UpdateDistillationPhaseDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.UpdateDistillationPhaseDto;
 
 import java.util.List;
 
 public class UpdateDistillationPlanDto {
-    private Long id;
+        private Long id;
     private String name;
     private String description;
     private List<UpdateDistillationPhaseDto> distillationPhases;

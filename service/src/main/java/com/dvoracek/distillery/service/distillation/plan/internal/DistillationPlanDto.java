@@ -1,8 +1,8 @@
-package com.dvoracek.distillery.service.distillation.plan;
+package com.dvoracek.distillery.service.distillation.plan.internal;
 
 
 import com.dvoracek.distillery.domain.plan.DistillationPlan;
-import com.dvoracek.distillery.service.distillation.phase.DistillationPhaseDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.DistillationPhaseDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
