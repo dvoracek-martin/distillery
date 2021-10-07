@@ -17,5 +17,7 @@ public interface DistillationExchangeDataService {
 
     void setWaiting(boolean isWaiting);
 
-    void setCurrentPlanAndPhaseId(Long distillationPlanId, Long distillationPhaseId);
+    void setCurrentPlanAndPhaseIdAndNotTerminate(Long distillationPlanId, Long distillationPhaseId, boolean terminate);
+
+    void updateTimeLeft(long elapsedTimeInMillis);
 }

@@ -11,6 +11,7 @@ public class DistillationExchangeData {
     private Long id;
     private Long planId;
     private Long currentPhaseId;
+    private Long timeElapsed;
     private double temperature;
     private double flow;
     private double weight;
@@ -107,6 +108,15 @@ public class DistillationExchangeData {
 
     public DistillationExchangeData setWaiting(boolean waiting) {
         this.waiting = waiting;
+        return this;
+    }
+
+    public Long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    public DistillationExchangeData setTimeElapsed(Long timeElapsed) {
+        this.timeElapsed = timeElapsed;
         return this;
     }
 }

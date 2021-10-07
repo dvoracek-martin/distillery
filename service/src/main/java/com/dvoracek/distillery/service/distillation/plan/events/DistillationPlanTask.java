@@ -31,7 +31,7 @@ public class DistillationPlanTask implements Runnable {
 
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
             DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
-                distillationExchangeDataService.setCurrentPlanAndPhaseId(distillationPlanDto.getId(), distillationPhaseDto.getId());
+            distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(),false);
             // TODO implement auto phase start vs wait for confirmation
 
 
@@ -98,6 +98,7 @@ public class DistillationPlanTask implements Runnable {
                 // if elapsed more time than defined for the phase
 
                 long elapsedTimeInMillis = System.currentTimeMillis() - timeStart;
+                distillationExchangeDataService.updateTimeLeft(elapsedTimeInMillis);
                 if (elapsedTimeInMillis > phaseTimeInMillis) {
                     distillationExchangeDataService.setTurnOn(false);
                     break;
@@ -105,11 +106,6 @@ public class DistillationPlanTask implements Runnable {
 
                 lastValueFlow = flowFromSensors;
                 lastValueWeight = weightFromSensors;
-                try {
-                    Thread.sleep(TICK_INTERVAL);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }
         distillationPlanEventPublisher.publishDistillationPlanEndEvent(distillationPlanDto);

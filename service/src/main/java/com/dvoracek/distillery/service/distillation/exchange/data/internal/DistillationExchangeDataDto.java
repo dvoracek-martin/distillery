@@ -6,6 +6,7 @@ public class DistillationExchangeDataDto {
     private Long id;
     private Long planId;
     private Long currentPhaseId;
+    private Long timeElapsed;
     private double temperature;
     private double flow;
     private double weight;
@@ -24,7 +25,8 @@ public class DistillationExchangeDataDto {
                 .setWeight(distillationExchangeData.getWeight())
                 .setWaiting(distillationExchangeData.isWaiting())
                 .setTerminate(distillationExchangeData.isTerminate())
-                .setTurnOn(distillationExchangeData.isTurnOn());
+                .setTurnOn(distillationExchangeData.isTurnOn())
+                .setTimeElapsed(distillationExchangeData.getTimeElapsed());
     }
 
     public Long getPlanId() {
@@ -114,6 +116,15 @@ public class DistillationExchangeDataDto {
 
     public DistillationExchangeDataDto setAlcLevel(double alcLevel) {
         this.alcLevel = alcLevel;
+        return this;
+    }
+
+    public Long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    public DistillationExchangeDataDto setTimeElapsed(Long timeElapsed) {
+        this.timeElapsed = timeElapsed;
         return this;
     }
 }
