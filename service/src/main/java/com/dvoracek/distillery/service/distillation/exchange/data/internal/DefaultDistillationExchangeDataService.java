@@ -1,0 +1,76 @@
+package com.dvoracek.distillery.service.distillation.exchange.data.internal;
+
+import com.dvoracek.distillery.domain.exchange.data.DistillationExchangeData;
+import com.dvoracek.distillery.domain.exchange.data.DistillationExchangeDataRepository;
+import com.dvoracek.distillery.service.distillation.exchange.data.DistillationExchangeDataService;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+
+@Service
+@Transactional
+public class DefaultDistillationExchangeDataService implements DistillationExchangeDataService {
+
+    private final DistillationExchangeDataRepository distillationExchangeDataRepository;
+
+    public DefaultDistillationExchangeDataService(DistillationExchangeDataRepository distillationExchangeDataRepository) {
+        this.distillationExchangeDataRepository = distillationExchangeDataRepository;
+    }
+
+    @Override
+    public DistillationExchangeDataDto createDistillationExchangeData(CreateDistillationExchangeDataDto createDistillationExchangeDataDto) {
+        DistillationExchangeData distillationExchangeData = new DistillationExchangeData();
+        distillationExchangeData.setFlow(createDistillationExchangeDataDto.getFlow());
+        distillationExchangeData.setTemperature(createDistillationExchangeDataDto.getTemperature());
+        distillationExchangeData.setWeight(createDistillationExchangeDataDto.getWeight());
+        distillationExchangeData.setWaiting(createDistillationExchangeDataDto.isWaiting());
+        distillationExchangeData.setTurnOn(createDistillationExchangeDataDto.isTurnOn());
+        distillationExchangeData.setTerminate(createDistillationExchangeDataDto.isTerminate());
+        return DistillationExchangeDataDto.toDto(distillationExchangeDataRepository.save(distillationExchangeData));
+    }
+
+    @Override
+    public DistillationExchangeDataDto findFirstByOrderByIdDesc() {
+        DistillationExchangeData distillationExchangeData = null;
+        while (distillationExchangeData == null) {
+            distillationExchangeData = distillationExchangeDataRepository.findFirstByOrderByIdDesc();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return DistillationExchangeDataDto.toDto(distillationExchangeData);
+    }
+
+    @Override
+    public void deleteAll() {
+        distillationExchangeDataRepository.deleteAll();
+    }
+
+    @Override
+    public void setTurnOn(boolean shallTurnOn) {
+        getLast().setTurnOn(shallTurnOn);
+    }
+
+    @Override
+    public void setAlcLevel(double alcLevel) {
+        getLast().setAlcLevel(alcLevel);
+    }
+
+    @Override
+    public void setWaiting(boolean isWaiting) {
+        getLast().setWaiting(isWaiting);
+    }
+
+    @Override
+    public void setCurrentPlanAndPhaseId(Long distillationPlanId, Long distillationPhaseId) {
+        DistillationExchangeData distillationExchangeData = getLast();
+        distillationExchangeData.setPlanId(distillationPlanId);
+        distillationExchangeData.setCurrentPhaseId(distillationPhaseId);
+    }
+
+    private DistillationExchangeData getLast() {
+        return distillationExchangeDataRepository.findFirstByOrderByIdDesc();
+    }
+}

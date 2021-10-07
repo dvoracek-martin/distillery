@@ -1,11 +1,11 @@
 package com.dvoracek.distillery.service.distillation.plan.internal;
 
-import com.dvoracek.distillery.domain.measurement.DistillationMeasurementRepository;
+import com.dvoracek.distillery.domain.exchange.data.DistillationExchangeDataRepository;
 import com.dvoracek.distillery.domain.phase.DistillationPhase;
 import com.dvoracek.distillery.domain.phase.DistillationPhaseRepository;
 import com.dvoracek.distillery.domain.plan.DistillationPlan;
 import com.dvoracek.distillery.domain.plan.DistillationPlanRepository;
-import com.dvoracek.distillery.service.distillation.measurement.DistillationMeasurementService;
+import com.dvoracek.distillery.service.distillation.exchange.data.DistillationExchangeDataService;
 import com.dvoracek.distillery.service.distillation.phase.internal.CreateDistillationPhaseDto;
 import com.dvoracek.distillery.service.distillation.phase.internal.DistillationPhaseNotFoundException;
 import com.dvoracek.distillery.service.distillation.phase.internal.UpdateDistillationPhaseDto;
@@ -35,14 +35,14 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
     private final DistillationPlanRepository distillationPlanRepository;
     private final DistillationPhaseRepository distillationPhaseRepository;
     private final DistillationPlanEventPublisher distillationPlanEventPublisher;
-    private final DistillationMeasurementService distillationMeasurementService;
+    private final DistillationExchangeDataService distillationExchangeDataService;
     private final TaskScheduler taskScheduler;
 
-    public DefaultDistillationPlanService(DistillationPlanRepository distillationPlanRepository, DistillationPhaseRepository distillationPhaseRepository, DistillationPlanEventPublisher distillationPlanEventPublisher, DistillationMeasurementRepository distillationMeasurementRepository, DistillationMeasurementService distillationMeasurementService, TaskScheduler taskScheduler) {
+    public DefaultDistillationPlanService(DistillationPlanRepository distillationPlanRepository, DistillationPhaseRepository distillationPhaseRepository, DistillationPlanEventPublisher distillationPlanEventPublisher, DistillationExchangeDataRepository distillationExchangeDataRepository, DistillationExchangeDataService distillationExchangeDataService, TaskScheduler taskScheduler) {
         this.distillationPlanRepository = distillationPlanRepository;
         this.distillationPhaseRepository = distillationPhaseRepository;
         this.distillationPlanEventPublisher = distillationPlanEventPublisher;
-        this.distillationMeasurementService = distillationMeasurementService;
+        this.distillationExchangeDataService = distillationExchangeDataService;
         this.taskScheduler = taskScheduler;
     }
 
@@ -103,7 +103,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
     public void startDistillation(DistillationPlanDto distillationPlanDto) {
         Object[] objects = getRunningTasks();
         if (objects.length == 0) {
-            DistillationPlanTask distillationPlanTask = new DistillationPlanTask(distillationPlanEventPublisher, distillationMeasurementService, distillationPlanDto);
+            DistillationPlanTask distillationPlanTask = new DistillationPlanTask(distillationPlanEventPublisher, distillationExchangeDataService, distillationPlanDto);
             taskScheduler.schedule(distillationPlanTask, new Date());
             distillationPlanEventPublisher.publishDistillationPlanStartEvent(distillationPlanDto);
         }

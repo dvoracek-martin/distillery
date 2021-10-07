@@ -1,29 +1,48 @@
-package com.dvoracek.distillery.domain.measurement;
+package com.dvoracek.distillery.domain.exchange.data;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_MEASUREMENT")
-public class DistillationMeasurement {
+@Table(name = "T_EXCHANGE_DATA")
+public class DistillationExchangeData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long planId;
+    private Long currentPhaseId;
     private double temperature;
     private double flow;
     private double weight;
     private double alcLevel;
-    private boolean pause;
+    private boolean waiting;
     private boolean terminate;
     private boolean turnOn;
-    private boolean waiting;
 
     public Long getId() {
         return id;
     }
 
-    public DistillationMeasurement setId(Long id) {
+    public DistillationExchangeData setId(Long id) {
         this.id = id;
+        return this;
+    }
+
+    public Long getPlanId() {
+        return planId;
+    }
+
+    public DistillationExchangeData setPlanId(Long planId) {
+        this.planId = planId;
+        return this;
+    }
+
+    public Long getCurrentPhaseId() {
+        return currentPhaseId;
+    }
+
+    public DistillationExchangeData setCurrentPhaseId(Long currentPhaseId) {
+        this.currentPhaseId = currentPhaseId;
         return this;
     }
 
@@ -31,7 +50,7 @@ public class DistillationMeasurement {
         return temperature;
     }
 
-    public DistillationMeasurement setTemperature(double temperature) {
+    public DistillationExchangeData setTemperature(double temperature) {
         this.temperature = temperature;
         return this;
     }
@@ -40,7 +59,7 @@ public class DistillationMeasurement {
         return flow;
     }
 
-    public DistillationMeasurement setFlow(double flow) {
+    public DistillationExchangeData setFlow(double flow) {
         this.flow = flow;
         return this;
     }
@@ -49,17 +68,8 @@ public class DistillationMeasurement {
         return weight;
     }
 
-    public DistillationMeasurement setWeight(double weight) {
+    public DistillationExchangeData setWeight(double weight) {
         this.weight = weight;
-        return this;
-    }
-
-    public boolean isPause() {
-        return pause;
-    }
-
-    public DistillationMeasurement setPause(boolean pause) {
-        this.pause = pause;
         return this;
     }
 
@@ -67,7 +77,7 @@ public class DistillationMeasurement {
         return terminate;
     }
 
-    public DistillationMeasurement setTerminate(boolean terminate) {
+    public DistillationExchangeData setTerminate(boolean terminate) {
         this.terminate = terminate;
         return this;
     }
@@ -76,7 +86,7 @@ public class DistillationMeasurement {
         return turnOn;
     }
 
-    public DistillationMeasurement setTurnOn(boolean work) {
+    public DistillationExchangeData setTurnOn(boolean work) {
         this.turnOn = work;
         return this;
     }
@@ -86,7 +96,7 @@ public class DistillationMeasurement {
         return alcLevel;
     }
 
-    public DistillationMeasurement setAlcLevel(double alcLevel) {
+    public DistillationExchangeData setAlcLevel(double alcLevel) {
         this.alcLevel = alcLevel;
         return this;
     }
@@ -95,7 +105,7 @@ public class DistillationMeasurement {
         return waiting;
     }
 
-    public DistillationMeasurement setWaiting(boolean waiting) {
+    public DistillationExchangeData setWaiting(boolean waiting) {
         this.waiting = waiting;
         return this;
     }

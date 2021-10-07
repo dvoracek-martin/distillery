@@ -6,7 +6,7 @@ import com.dvoracek.distillery.service.distillation.phase.internal.UpdateDistill
 import java.util.List;
 
 public class UpdateDistillationPlanDto {
-        private Long id;
+    private Long id;
     private String name;
     private String description;
     private List<UpdateDistillationPhaseDto> distillationPhases;
