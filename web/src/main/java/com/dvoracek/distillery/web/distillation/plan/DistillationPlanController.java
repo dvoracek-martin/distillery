@@ -29,7 +29,7 @@ public class DistillationPlanController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public DistillationPlanDto getPhase(@PathVariable("id") Long id) {
+    public DistillationPlanDto getPlan(@PathVariable("id") Long id) {
         LOGGER.debug("Received Http.GET /api/plan/" + id);
         return this.distillationPlanService.getDistillationPlan(id);
     }

@@ -25,8 +25,6 @@ public class DistillationExchangeDataController {
         this.distillationExchangeDataService = distillationExchangeDataService;
     }
 
-
-
     @GetMapping("/last")
     @ResponseStatus(HttpStatus.OK)
     public DistillationExchangeDataDto getLastExchangeData() {

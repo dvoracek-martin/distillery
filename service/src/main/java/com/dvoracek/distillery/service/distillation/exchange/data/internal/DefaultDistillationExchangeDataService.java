@@ -26,6 +26,8 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
         distillationExchangeData.setWaiting(createDistillationExchangeDataDto.isWaiting());
         distillationExchangeData.setTurnOn(createDistillationExchangeDataDto.isTurnOn());
         distillationExchangeData.setTerminate(createDistillationExchangeDataDto.isTerminate());
+        distillationExchangeData.setPlanId(createDistillationExchangeDataDto.getPlanId());
+        distillationExchangeData.setCurrentPhaseId(createDistillationExchangeDataDto.getCurrentPhaseId());
         return DistillationExchangeDataDto.toDto(distillationExchangeDataRepository.save(distillationExchangeData));
     }
 

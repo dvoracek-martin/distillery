@@ -106,6 +106,8 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
             DistillationPlanTask distillationPlanTask = new DistillationPlanTask(distillationPlanEventPublisher, distillationExchangeDataService, distillationPlanDto);
             taskScheduler.schedule(distillationPlanTask, new Date());
             distillationPlanEventPublisher.publishDistillationPlanStartEvent(distillationPlanDto);
+        } else {
+            System.out.println("Trying to start, when there is already running");
         }
     }
 

@@ -31,7 +31,7 @@ public class DistillationPlanTask implements Runnable {
 
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
             DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
-            distillationExchangeDataService.setCurrentPlanAndPhaseId(distillationPlanDto.getId(), distillationPhaseDto.getId());
+                distillationExchangeDataService.setCurrentPlanAndPhaseId(distillationPlanDto.getId(), distillationPhaseDto.getId());
             // TODO implement auto phase start vs wait for confirmation
 
 
