@@ -89,6 +89,6 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
     }
 
     private DistillationExchangeData getLast() {
-        return distillationExchangeDataRepository.findFirstByOrderByIdDesc();
+        return distillationExchangeDataRepository.findTopByOrderByIdDesc();
     }
 }
