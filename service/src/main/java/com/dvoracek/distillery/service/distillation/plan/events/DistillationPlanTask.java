@@ -30,8 +30,8 @@ public class DistillationPlanTask implements Runnable {
         long timeStart = System.currentTimeMillis();
 
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
+            distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
             DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
-            distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(),false);
             // TODO implement auto phase start vs wait for confirmation
 
 
@@ -64,6 +64,11 @@ public class DistillationPlanTask implements Runnable {
                 }
 
                 if (distillationPhaseDto.getTemperature() != Double.MIN_VALUE) {
+
+                    System.out.println("SET UP" + (distillationPhaseDto.getTemperature()));
+                    System.out.println("SENSOR" + (temperatureFromSensors));
+                    System.out.println("IS TURNED ON" + (wasTurnOn));
+
                     if ((distillationPhaseDto.getTemperature()) + 5 > temperatureFromSensors) {
                         if (!wasTurnOn) {
                             distillationExchangeDataService.setTurnOn(true);

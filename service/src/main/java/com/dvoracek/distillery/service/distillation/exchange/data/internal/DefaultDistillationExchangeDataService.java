@@ -68,9 +68,13 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
     @Override
     public void setCurrentPlanAndPhaseIdAndNotTerminate(Long distillationPlanId, Long distillationPhaseId, boolean terminate) {
         DistillationExchangeData distillationExchangeData = getLast();
+        if (distillationExchangeData == null) {
+            distillationExchangeData = new DistillationExchangeData();
+        }
         distillationExchangeData.setPlanId(distillationPlanId);
         distillationExchangeData.setCurrentPhaseId(distillationPhaseId);
         distillationExchangeData.setTerminate(false);
+        distillationExchangeDataRepository.save(distillationExchangeData);
     }
 
     @Override
