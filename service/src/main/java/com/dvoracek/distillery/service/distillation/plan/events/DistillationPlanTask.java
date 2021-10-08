@@ -26,7 +26,7 @@ public class DistillationPlanTask implements Runnable {
                 + " on thread " + Thread.currentThread().getName());
 
         // purge the exchangeData values from the previous process Commented for test purposes
-        // distillationExchangeDataService.deleteAll();
+        distillationExchangeDataService.deleteAll();
         long timeStart = System.currentTimeMillis();
 
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {

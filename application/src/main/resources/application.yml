@@ -4,7 +4,7 @@ server:
 #show sql statement
 logging:
   level:
-    org.hibernate.SQL: ERROR
+    org.hibernate.SQL: INFO
 
 spring:
   main:
