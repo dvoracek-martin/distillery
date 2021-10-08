@@ -16,6 +16,9 @@ public class DistillationExchangeDataDto {
     private boolean turnOn;
 
     public static DistillationExchangeDataDto toDto(DistillationExchangeData distillationExchangeData) {
+        if (distillationExchangeData==null){
+            return null;
+        }
         return new DistillationExchangeDataDto()
                 .setTemperature(distillationExchangeData.getTemperature())
                 .setFlow(distillationExchangeData.getFlow())

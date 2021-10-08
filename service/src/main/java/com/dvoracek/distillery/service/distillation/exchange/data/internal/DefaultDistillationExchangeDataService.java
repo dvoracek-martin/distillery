@@ -36,7 +36,9 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
     public DistillationExchangeDataDto findFirstByOrderByIdDesc() {
         DistillationExchangeData distillationExchangeData = null;
         boolean isWaiting = false;
-        while (distillationExchangeData == null) {
+        int waitingCounter = 0;
+        while ((distillationExchangeData == null) && (waitingCounter < 10)) {
+            waitingCounter++;
             try {
                 if (isWaiting) {
                     System.out.println("WATING LAST");

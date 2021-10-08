@@ -61,12 +61,11 @@ public class DistillationPlanTask implements Runnable {
                     continue;
                 }
 
-                temperatureFromSensors = distillationExchangeDataDto.getTemperature();
                 if (distillationPhaseDto.getTemperature() != Double.MIN_VALUE) {
 
-                    if ((distillationPhaseDto.getTemperature()) + 5 > temperatureFromSensors) {
+                    if ((distillationPhaseDto.getTemperature()) > distillationExchangeDataDto.getTemperature()) {
                         distillationExchangeDataService.setTurnOn(true);
-                    } else if ((distillationPhaseDto.getTemperature()) < temperatureFromSensors) {
+                    } else if ((distillationPhaseDto.getTemperature()) + 5 < distillationExchangeDataDto.getTemperature()) {
                         distillationExchangeDataService.setTurnOn(false);
                     }
                 }
