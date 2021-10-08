@@ -35,14 +35,13 @@ public class DistillationPlanTask implements Runnable {
                 initialized = true;
             }
             DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
-            double temperatureFromSensors = distillationExchangeDataDto.getTemperature();
+            double temperatureFromSensors;
             double flowFromSensors = distillationExchangeDataDto.getFlow();
             double weightFromSensors = distillationExchangeDataDto.getWeight();
             // init
             double lastValueFlow = Double.MIN_VALUE;
             double lastValueWeight = Double.MIN_VALUE;
             long phaseTimeInMillis = distillationPhaseDto.getTime() * 1000 * 60;
-            boolean wasTurnOn = false;
 
             while (true) {
                 distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
@@ -55,7 +54,6 @@ public class DistillationPlanTask implements Runnable {
                 if (distillationExchangeDataDto.isWaiting()) {
                     try {
                         distillationExchangeDataService.setTurnOn(false);
-                        wasTurnOn = false;
                         Thread.sleep(TICK_INTERVAL);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -63,22 +61,13 @@ public class DistillationPlanTask implements Runnable {
                     continue;
                 }
 
+                temperatureFromSensors = distillationExchangeDataDto.getTemperature();
                 if (distillationPhaseDto.getTemperature() != Double.MIN_VALUE) {
 
-                    System.out.println("SET UP" + (distillationPhaseDto.getTemperature()));
-                    System.out.println("SENSOR" + (temperatureFromSensors));
-                    System.out.println("IS TURNED ON" + (wasTurnOn));
-
                     if ((distillationPhaseDto.getTemperature()) + 5 > temperatureFromSensors) {
-                        if (!wasTurnOn) {
-                            distillationExchangeDataService.setTurnOn(true);
-                            wasTurnOn = true;
-                        }
-                    } else {
-                        if (!wasTurnOn) {
-                            distillationExchangeDataService.setTurnOn(false);
-                            wasTurnOn = false;
-                        }
+                        distillationExchangeDataService.setTurnOn(true);
+                    } else if ((distillationPhaseDto.getTemperature()) < temperatureFromSensors) {
+                        distillationExchangeDataService.setTurnOn(false);
                     }
                 }
                 if (distillationPhaseDto.getFlow() != Double.MIN_VALUE) {
