@@ -22,19 +22,19 @@ public class DistillationPlanTask implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(new Date() + " Runnable Task with " + distillationPlanDto.getId()
-                + " on thread " + Thread.currentThread().getName());
-
         // purge the exchangeData values from the previous process Commented for test purposes
         distillationExchangeDataService.deleteAll();
+
+        // init
         long timeStart = System.currentTimeMillis();
-
+        boolean initialized = false;
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
-            distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
-            DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
             // TODO implement auto phase start vs wait for confirmation
-
-
+            if (!initialized) {
+                distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
+                initialized = true;
+            }
+            DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
             double temperatureFromSensors = distillationExchangeDataDto.getTemperature();
             double flowFromSensors = distillationExchangeDataDto.getFlow();
             double weightFromSensors = distillationExchangeDataDto.getWeight();

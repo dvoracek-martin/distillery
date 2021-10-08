@@ -6,6 +6,7 @@ import com.dvoracek.distillery.service.distillation.exchange.data.DistillationEx
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -34,10 +35,15 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
     @Override
     public DistillationExchangeDataDto findFirstByOrderByIdDesc() {
         DistillationExchangeData distillationExchangeData = null;
+        boolean isWaiting = false;
         while (distillationExchangeData == null) {
-            distillationExchangeData = distillationExchangeDataRepository.findFirstByOrderByIdDesc();
             try {
-                Thread.sleep(5000);
+                if (isWaiting) {
+                    System.out.println("WATING LAST");
+                }
+                isWaiting = true;
+                distillationExchangeData = distillationExchangeDataRepository.findTopByOrderByIdDesc();
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

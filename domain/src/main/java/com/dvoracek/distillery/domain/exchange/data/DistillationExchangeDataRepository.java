@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DistillationExchangeDataRepository extends JpaRepository<DistillationExchangeData, Long> {
-    DistillationExchangeData findFirstByOrderByIdDesc();
+    DistillationExchangeData findTopByOrderByIdDesc();
 }
