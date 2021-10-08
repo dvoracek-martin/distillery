@@ -26,14 +26,15 @@ public class DistillationPlanTask implements Runnable {
         distillationExchangeDataService.deleteAll();
 
         // init
-        long timeStart = System.currentTimeMillis();
         boolean initialized = false;
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
+
             // TODO implement auto phase start vs wait for confirmation
             if (!initialized) {
                 distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
                 initialized = true;
             }
+            long timeStart = System.currentTimeMillis();
             DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
             double temperatureFromSensors;
             double flowFromSensors = distillationExchangeDataDto.getFlow();
