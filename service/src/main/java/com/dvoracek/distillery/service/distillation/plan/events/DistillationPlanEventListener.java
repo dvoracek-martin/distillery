@@ -10,11 +10,10 @@ public class DistillationPlanEventListener implements ApplicationListener<Distil
     @Override
     public void onApplicationEvent(DistillationPlanEvent event) {
         if (event instanceof DistillationPlanStartEvent){
-            System.out.println("Start");
+            System.out.println("Start of a distillation plan");
         } else if (event instanceof DistillationPlanEndEvent){
-            System.out.println("End");
+            System.out.println("End of a distillation plan");
         }
-        System.out.println("Received spring custom event - " + event.getDistillationPlanDto().getId());
     }
 
 }

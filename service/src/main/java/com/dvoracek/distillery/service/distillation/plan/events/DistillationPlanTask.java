@@ -4,6 +4,8 @@ import com.dvoracek.distillery.service.distillation.exchange.data.DistillationEx
 import com.dvoracek.distillery.service.distillation.exchange.data.internal.DistillationExchangeDataDto;
 import com.dvoracek.distillery.service.distillation.phase.internal.DistillationPhaseDto;
 import com.dvoracek.distillery.service.distillation.plan.internal.DistillationPlanDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
 
@@ -28,7 +30,6 @@ public class DistillationPlanTask implements Runnable {
         // init
         boolean initialized = false;
         for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
-
             // TODO implement auto phase start vs wait for confirmation
             if (!initialized) {
                 distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
@@ -46,12 +47,15 @@ public class DistillationPlanTask implements Runnable {
 
             while (true) {
                 distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
+
                 if (distillationExchangeDataDto.isTerminate()) {
+                    distillationExchangeDataService.setTurnOn(false);
+                    System.out.println("VYPINAM");
                     // TODO emit phase ended
                     break;
                 }
                 // if there is a waiting signal, don't do anything, check every second
-                final int TICK_INTERVAL = 5000;
+                final int TICK_INTERVAL = 1000;
                 if (distillationExchangeDataDto.isWaiting()) {
                     try {
                         distillationExchangeDataService.setTurnOn(false);
@@ -60,10 +64,11 @@ public class DistillationPlanTask implements Runnable {
                         e.printStackTrace();
                     }
                     continue;
+                } else {
+                    distillationExchangeDataService.setTurnOn(true);
                 }
 
                 if (distillationPhaseDto.getTemperature() != Double.MIN_VALUE) {
-
                     if ((distillationPhaseDto.getTemperature()) > distillationExchangeDataDto.getTemperature()) {
                         distillationExchangeDataService.setTurnOn(true);
                     } else if ((distillationPhaseDto.getTemperature()) + 5 < distillationExchangeDataDto.getTemperature()) {
@@ -90,12 +95,18 @@ public class DistillationPlanTask implements Runnable {
 //                }
 
                 // if elapsed more time than defined for the phase
-
                 long elapsedTimeInMillis = System.currentTimeMillis() - timeStart;
                 distillationExchangeDataService.updateTimeLeft(elapsedTimeInMillis);
                 if (elapsedTimeInMillis > phaseTimeInMillis) {
                     distillationExchangeDataService.setTurnOn(false);
+                    initialized = false;
                     break;
+                }
+
+                try {
+                    Thread.sleep(TICK_INTERVAL);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
                 lastValueFlow = flowFromSensors;

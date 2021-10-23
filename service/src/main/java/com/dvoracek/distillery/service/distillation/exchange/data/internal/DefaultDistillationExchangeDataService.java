@@ -6,7 +6,7 @@ import com.dvoracek.distillery.service.distillation.exchange.data.DistillationEx
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.time.Instant;
 
 @Service
 @Transactional
@@ -20,36 +20,41 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
 
     @Override
     public DistillationExchangeDataDto createDistillationExchangeData(CreateDistillationExchangeDataDto createDistillationExchangeDataDto) {
+        DistillationExchangeData lastDistillationExchangeData = getLast();
         DistillationExchangeData distillationExchangeData = new DistillationExchangeData();
-        distillationExchangeData.setFlow(createDistillationExchangeDataDto.getFlow());
-        distillationExchangeData.setTemperature(createDistillationExchangeDataDto.getTemperature());
-        distillationExchangeData.setWeight(createDistillationExchangeDataDto.getWeight());
-        distillationExchangeData.setWaiting(createDistillationExchangeDataDto.isWaiting());
-        distillationExchangeData.setTurnOn(createDistillationExchangeDataDto.isTurnOn());
-        distillationExchangeData.setTerminate(createDistillationExchangeDataDto.isTerminate());
-        distillationExchangeData.setPlanId(createDistillationExchangeDataDto.getPlanId());
-        distillationExchangeData.setCurrentPhaseId(createDistillationExchangeDataDto.getCurrentPhaseId());
+
+        // if the data in the databases is newer then the current data, adjust only the measured values
+        if (lastDistillationExchangeData.getTimestamp() > createDistillationExchangeDataDto.getTimestamp()) {
+            distillationExchangeData.setFlow(createDistillationExchangeDataDto.getFlow());
+            distillationExchangeData.setTemperature(createDistillationExchangeDataDto.getTemperature());
+            distillationExchangeData.setWeight(createDistillationExchangeDataDto.getWeight());
+            distillationExchangeData.setWaiting(lastDistillationExchangeData.isWaiting());
+            distillationExchangeData.setTurnOn(lastDistillationExchangeData.isTurnOn());
+            distillationExchangeData.setTerminate(lastDistillationExchangeData.isTerminate());
+            distillationExchangeData.setPlanId(lastDistillationExchangeData.getPlanId());
+            distillationExchangeData.setCurrentPhaseId(lastDistillationExchangeData.getCurrentPhaseId());
+        } else {
+            distillationExchangeData.setFlow(createDistillationExchangeDataDto.getFlow());
+            distillationExchangeData.setTemperature(createDistillationExchangeDataDto.getTemperature());
+            distillationExchangeData.setWeight(createDistillationExchangeDataDto.getWeight());
+            distillationExchangeData.setWaiting(createDistillationExchangeDataDto.isWaiting());
+            distillationExchangeData.setTurnOn(createDistillationExchangeDataDto.isTurnOn());
+            distillationExchangeData.setTerminate(createDistillationExchangeDataDto.isTerminate());
+            distillationExchangeData.setPlanId(createDistillationExchangeDataDto.getPlanId());
+            distillationExchangeData.setCurrentPhaseId(createDistillationExchangeDataDto.getCurrentPhaseId());
+            distillationExchangeData.setTimeElapsed(createDistillationExchangeDataDto.getTimeElapsed());
+        }
+        distillationExchangeData.setTimestamp(Instant.now().toEpochMilli());
         return DistillationExchangeDataDto.toDto(distillationExchangeDataRepository.save(distillationExchangeData));
     }
 
     @Override
     public DistillationExchangeDataDto findFirstByOrderByIdDesc() {
-        DistillationExchangeData distillationExchangeData = null;
-        boolean isWaiting = false;
-        int waitingCounter = 0;
-        while ((distillationExchangeData == null) && (waitingCounter < 10)) {
-            waitingCounter++;
-            try {
-                if (isWaiting) {
-                    System.out.println("WATING LAST");
-                }
-                isWaiting = true;
-                distillationExchangeData = distillationExchangeDataRepository.findTopByOrderByIdDesc();
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        DistillationExchangeData distillationExchangeData;
+        if (distillationExchangeDataRepository.countExchangeData() == 0) {
+            return null;
         }
+        distillationExchangeData = distillationExchangeDataRepository.findFirstByOrderByCreatedTsByDesc().get(0);
         return DistillationExchangeDataDto.toDto(distillationExchangeData);
     }
 
@@ -60,17 +65,17 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
 
     @Override
     public void setTurnOn(boolean shallTurnOn) {
-        getLast().setTurnOn(shallTurnOn);
+        getLast().setTurnOn(shallTurnOn).setTimestamp(Instant.now().toEpochMilli());
     }
 
     @Override
     public void setAlcLevel(double alcLevel) {
-        getLast().setAlcLevel(alcLevel);
+        getLast().setAlcLevel(alcLevel).setTimestamp(Instant.now().toEpochMilli());
     }
 
     @Override
     public void setWaiting(boolean isWaiting) {
-        getLast().setWaiting(isWaiting);
+        getLast().setWaiting(isWaiting).setTimestamp(Instant.now().toEpochMilli());
     }
 
     @Override
@@ -91,6 +96,9 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
     }
 
     private DistillationExchangeData getLast() {
-        return distillationExchangeDataRepository.findTopByOrderByIdDesc();
+        if (distillationExchangeDataRepository.countExchangeData() == 0) {
+            return null;
+        }
+        return distillationExchangeDataRepository.findFirstByOrderByCreatedTsByDesc().get(0);
     }
 }

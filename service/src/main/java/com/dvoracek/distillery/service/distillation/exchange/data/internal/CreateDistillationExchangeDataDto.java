@@ -4,15 +4,25 @@ public class CreateDistillationExchangeDataDto {
     private Long planId;
     private Long currentPhaseId;
     private double temperature;
-    private double flow;
+    private Long timeElapsed;
+    private Long timestamp;
     private double weight;
-    private Long time;
     private boolean waiting;
+    private double flow;
     private boolean terminate;
     private boolean turnOn;
 
     public double getTemperature() {
         return temperature;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public CreateDistillationExchangeDataDto setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+        return this;
     }
 
     public CreateDistillationExchangeDataDto setTemperature(double temperature) {
@@ -38,12 +48,12 @@ public class CreateDistillationExchangeDataDto {
         return this;
     }
 
-    public Long getTime() {
-        return time;
+    public Long getTimeElapsed() {
+        return timeElapsed;
     }
 
-    public CreateDistillationExchangeDataDto setTime(Long time) {
-        this.time = time;
+    public CreateDistillationExchangeDataDto setTimeElapsed(Long timeElapsed) {
+        this.timeElapsed = timeElapsed;
         return this;
     }
 

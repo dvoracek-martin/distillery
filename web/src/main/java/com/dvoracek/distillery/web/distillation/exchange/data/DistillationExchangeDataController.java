@@ -28,14 +28,14 @@ public class DistillationExchangeDataController {
     @GetMapping("/last")
     @ResponseStatus(HttpStatus.OK)
     public DistillationExchangeDataDto getLastExchangeData() {
-        LOGGER.debug("Received Http.GET /api/data/last");
+        LOGGER.info("Received Http.GET /api/data/last");
         return this.distillationExchangeDataService.findFirstByOrderByIdDesc();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DistillationExchangeDataDto createExchangeData(@RequestBody @Validated CreateDistillationExchangeDataDto createDistillationExchangeDataDto) throws JsonProcessingException {
-        LOGGER.debug("Received Http.POST /api/data : {}", new ObjectMapper().writeValueAsString(createDistillationExchangeDataDto));
+        LOGGER.info("Received Http.POST /api/data : {}", new ObjectMapper().writeValueAsString(createDistillationExchangeDataDto));
         return this.distillationExchangeDataService.createDistillationExchangeData(createDistillationExchangeDataDto);
     }
 }

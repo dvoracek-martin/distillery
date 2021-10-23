@@ -18,7 +18,6 @@ public class DistillationPlanEventPublisher {
     public void publishDistillationPlanStartEvent(final DistillationPlanDto distillationPlanDto) {
         if (!distillationLock) {
             distillationLock = true;
-            System.out.println("Distillation plan started. ");
             DistillationPlanEvent distillationPlanEvent = new DistillationPlanStartEvent(this, distillationPlanDto);
             applicationEventPublisher.publishEvent(distillationPlanEvent);
         }
@@ -26,7 +25,6 @@ public class DistillationPlanEventPublisher {
 
     public void publishDistillationPlanEndEvent(final DistillationPlanDto distillationPlanDto) {
         distillationLock = false;
-        System.out.println("Distillation plan finished. ");
         DistillationPlanEvent distillationPlanEvent = new DistillationPlanEndEvent(this, distillationPlanDto);
         applicationEventPublisher.publishEvent(distillationPlanEvent);
     }
