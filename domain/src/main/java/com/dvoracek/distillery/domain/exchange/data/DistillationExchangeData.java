@@ -20,6 +20,7 @@ public class DistillationExchangeData {
     private boolean waiting;
     private boolean terminate;
     private boolean turnOn;
+    private String source;
 
     public Long getId() {
         return id;
@@ -127,6 +128,15 @@ public class DistillationExchangeData {
 
     public DistillationExchangeData setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+        return this;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public DistillationExchangeData setSource(String source) {
+        this.source = source;
         return this;
     }
 }

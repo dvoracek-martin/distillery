@@ -2,100 +2,121 @@ package com.dvoracek.distillery.service.distillation.plan.events;
 
 import com.dvoracek.distillery.service.distillation.exchange.data.DistillationExchangeDataService;
 import com.dvoracek.distillery.service.distillation.exchange.data.internal.DistillationExchangeDataDto;
+import com.dvoracek.distillery.service.distillation.phase.internal.DefaultDistillationPhaseService;
 import com.dvoracek.distillery.service.distillation.phase.internal.DistillationPhaseDto;
 import com.dvoracek.distillery.service.distillation.plan.internal.DistillationPlanDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
+@Component
+public class DistillationPlanTask implements ApplicationListener<DistillationPlanEvent> {
 
-public class DistillationPlanTask implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDistillationPhaseService.class);
+    private static final int TICK_INTERVAL = 1000;
+    private static final int HEAT_TOLERANCE_IN_CELSIUS = 3;
+
     private final DistillationPlanEventPublisher distillationPlanEventPublisher;
     private final DistillationExchangeDataService distillationExchangeDataService;
 
-    private DistillationPlanDto distillationPlanDto;
+    private static DistillationPlanDto distillationPlanDto;
+
+    private static boolean shallReloadPlan = false;
+    private boolean nextPhase;
 
 
-    public DistillationPlanTask(DistillationPlanEventPublisher distillationPlanEventPublisher, DistillationExchangeDataService distillationExchangeDataService, DistillationPlanDto distillationPlanDto) {
+    public DistillationPlanTask(DistillationPlanEventPublisher distillationPlanEventPublisher, DistillationExchangeDataService distillationExchangeDataService) {
         this.distillationPlanEventPublisher = distillationPlanEventPublisher;
         this.distillationExchangeDataService = distillationExchangeDataService;
-        this.distillationPlanDto = distillationPlanDto;
     }
 
-    @Override
-    public void run() {
-        // purge the exchangeData values from the previous process Commented for test purposes
+    public void startDistillation() {
+
+        // purge the exchangeData values from the previous process
         distillationExchangeDataService.deleteAll();
 
         // init
         boolean initialized = false;
-        for (DistillationPhaseDto distillationPhaseDto : distillationPlanDto.getDistillationPhases()) {
+        int index = 0;
+        for (DistillationPhaseDto distillationPhaseDto : this.distillationPlanDto.getDistillationPhases()) {
             // TODO implement auto phase start vs wait for confirmation
             if (!initialized) {
-                distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
+                distillationExchangeDataService.setCurrentPlanAndPhaseIdAndNotTerminate(this.distillationPlanDto.getId(), distillationPhaseDto.getId(), false);
                 initialized = true;
             }
+
             long timeStart = System.currentTimeMillis();
             DistillationExchangeDataDto distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
-            double temperatureFromSensors;
             double flowFromSensors = distillationExchangeDataDto.getFlow();
             double weightFromSensors = distillationExchangeDataDto.getWeight();
             // init
-            double lastValueFlow = Double.MIN_VALUE;
-            double lastValueWeight = Double.MIN_VALUE;
             long phaseTimeInMillis = distillationPhaseDto.getTime() * 1000 * 60;
+            long waitingTime = 0;
+            long waitingTimeInTotal = 0;
+            boolean isWaiting = false;
 
             while (true) {
+                if (nextPhase) {
+                    nextPhase = false;
+                    initialized = false;
+                    break;
+                }
+
+                // if the current distillation phase has been updated while the distillation plan is running
+                if (shallReloadPlan) {
+                    distillationPhaseDto = this.distillationPlanDto.getDistillationPhases().get(index);
+
+                    // if the current distillation phase has just been deleted
+                    if (distillationPhaseDto == null) {
+                        initialized = false;
+                        break;
+                    }
+                    phaseTimeInMillis = distillationPhaseDto.getTime() * 1000 * 60;
+                    shallReloadPlan = false;
+                }
+
                 distillationExchangeDataDto = distillationExchangeDataService.findFirstByOrderByIdDesc();
 
                 if (distillationExchangeDataDto.isTerminate()) {
-                    distillationExchangeDataService.setTurnOn(false);
-                    System.out.println("VYPINAM");
-                    // TODO emit phase ended
+                    distillationExchangeDataService.finishDistillation();
+                    distillationPlanEventPublisher.publishDistillationPlanEndEvent(distillationPlanDto);
                     break;
                 }
+
                 // if there is a waiting signal, don't do anything, check every second
-                final int TICK_INTERVAL = 1000;
                 if (distillationExchangeDataDto.isWaiting()) {
                     try {
-                        distillationExchangeDataService.setTurnOn(false);
+                        if (!isWaiting) {
+                            waitingTime = System.currentTimeMillis();
+                            isWaiting = true;
+                            distillationExchangeDataService.setTurnOn(false);
+                        }
                         Thread.sleep(TICK_INTERVAL);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     continue;
                 } else {
-                    distillationExchangeDataService.setTurnOn(true);
-                }
-
-                if (distillationPhaseDto.getTemperature() != Double.MIN_VALUE) {
-                    if ((distillationPhaseDto.getTemperature()) > distillationExchangeDataDto.getTemperature()) {
+                    if (isWaiting) {
+                        waitingTimeInTotal += System.currentTimeMillis() - waitingTime;
+                        waitingTime = 0;
+                        isWaiting = false;
                         distillationExchangeDataService.setTurnOn(true);
-                    } else if ((distillationPhaseDto.getTemperature()) + 5 < distillationExchangeDataDto.getTemperature()) {
-                        distillationExchangeDataService.setTurnOn(false);
                     }
                 }
-                if (distillationPhaseDto.getFlow() != Double.MIN_VALUE) {
-                    // TODO
-                    // if max volume pro phase then
-                }
-                if (distillationPhaseDto.getVolume() != Double.MIN_VALUE && lastValueFlow != Double.MIN_VALUE && lastValueWeight != Double.MIN_VALUE) {
-                    // What is the current alc. level
-                    // The formula is (Volume - Weight)/(0.2107 * Volume) = percentage of ethanol
-                    double flow = flowFromSensors - lastValueFlow;
-                    double weight = weightFromSensors - lastValueWeight;
-                    double alcLevel = (flow - weight) / (0.2107 * flow);
-                    // TODO emit info
-                }
-                // TODO do I need it?
-//                if (distillationPhaseDto.getVolume() != null) {
-//                    if ((System.currentTimeMillis() - timeStart) > distillationPhaseDto.getTime()) {
-//                        break;
-//                    }
-//                }
 
-                // if elapsed more time than defined for the phase
-                long elapsedTimeInMillis = System.currentTimeMillis() - timeStart;
+                // measure the temperature and turn the heater on/off
+                if ((distillationPhaseDto.getTemperature()) > distillationExchangeDataDto.getTemperature()) {
+                    distillationExchangeDataService.setTurnOn(true);
+                } else if ((distillationPhaseDto.getTemperature()) + HEAT_TOLERANCE_IN_CELSIUS < distillationExchangeDataDto.getTemperature()) {
+                    distillationExchangeDataService.setTurnOn(false);
+                }
+
+                // TODO measure flow & weight
+
+                // if has elapsed more time than defined for the phase, switch to the next phase
+                long elapsedTimeInMillis = System.currentTimeMillis() - timeStart - waitingTimeInTotal;
                 distillationExchangeDataService.updateTimeLeft(elapsedTimeInMillis);
                 if (elapsedTimeInMillis > phaseTimeInMillis) {
                     distillationExchangeDataService.setTurnOn(false);
@@ -108,12 +129,31 @@ public class DistillationPlanTask implements Runnable {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                lastValueFlow = flowFromSensors;
-                lastValueWeight = weightFromSensors;
             }
+
+            index++;
         }
+        distillationExchangeDataService.finishDistillation();
         distillationPlanEventPublisher.publishDistillationPlanEndEvent(distillationPlanDto);
     }
-}
 
+    @Override
+    public void onApplicationEvent(DistillationPlanEvent event) {
+        if (event instanceof DistillationPlanStartEvent) {
+            this.startDistillation();
+            LOGGER.info("Start of a distillation plan");
+        } else if (event instanceof DistillationPlanEndEvent) {
+            LOGGER.info("End of a distillation plan");
+        } else if (event instanceof DistillationPlanUpdatedEvent) {
+            this.distillationPlanDto = event.getDistillationPlanDto();
+            shallReloadPlan = true;
+        } else if (event instanceof DistillationPlanJumpToNextPhase) {
+            nextPhase = true;
+        }
+    }
+
+    public DistillationPlanTask setDistillationPlanDto(DistillationPlanDto distillationPlanDto) {
+        this.distillationPlanDto = distillationPlanDto;
+        return this;
+    }
+}

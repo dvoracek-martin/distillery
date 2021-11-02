@@ -1,6 +1,8 @@
 package com.dvoracek.distillery.domain.plan;
 
 import com.dvoracek.distillery.domain.phase.DistillationPhase;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,14 +20,16 @@ public class DistillationPlan {
 
     @NotBlank
     @Size(max = 255)
-//    @Column(unique = true)
+    @Column()
     private String name;
 
+    @NotBlank
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<DistillationPhase> distillationPhases = new ArrayList<>();
-
 
     public List<DistillationPhase> getDistillationPhases() {
         return distillationPhases;
@@ -64,20 +68,4 @@ public class DistillationPlan {
         this.description = description;
         return this;
     }
-
-//    public List<PurchasedProduct> getDistillationPhases() {
-//        return distillationPhases;
-//    }
-//
-//    public DistillationPlan setDistillationPhases(List<PurchasedProduct> distillationPhases) {
-//        this.distillationPhases = distillationPhases;
-//        return this;
-//    }
-//
-//
-//    private void handleProducts(List<DistillationPhase> products) {
-//        this.distillationPhases = products.stream()
-//                .map(PurchasedProduct::new)
-//                .collect(Collectors.toList());
-//    }
 }

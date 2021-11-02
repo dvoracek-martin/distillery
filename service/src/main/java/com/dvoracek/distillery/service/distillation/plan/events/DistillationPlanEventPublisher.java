@@ -9,7 +9,7 @@ public class DistillationPlanEventPublisher {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    private static boolean distillationLock = false;
+    public static boolean distillationLock = false;
 
     public DistillationPlanEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.applicationEventPublisher = applicationEventPublisher;
@@ -26,6 +26,16 @@ public class DistillationPlanEventPublisher {
     public void publishDistillationPlanEndEvent(final DistillationPlanDto distillationPlanDto) {
         distillationLock = false;
         DistillationPlanEvent distillationPlanEvent = new DistillationPlanEndEvent(this, distillationPlanDto);
+        applicationEventPublisher.publishEvent(distillationPlanEvent);
+    }
+
+    public void publishDistillationPlanUpdatedEvent(final DistillationPlanDto distillationPlanDto) {
+        DistillationPlanEvent distillationPlanEvent = new DistillationPlanUpdatedEvent(this, distillationPlanDto);
+        applicationEventPublisher.publishEvent(distillationPlanEvent);
+    }
+
+    public void publishDistillationPlanJumpToNextPhase() {
+        DistillationPlanEvent distillationPlanEvent = new DistillationPlanJumpToNextPhase(this);
         applicationEventPublisher.publishEvent(distillationPlanEvent);
     }
 }

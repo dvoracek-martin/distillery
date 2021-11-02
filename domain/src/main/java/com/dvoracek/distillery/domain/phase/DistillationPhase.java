@@ -19,7 +19,7 @@ public class DistillationPhase {
 
     @NotBlank
     @Size(max = 255)
-    @Column(unique = true)
+    @Column
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -30,7 +30,6 @@ public class DistillationPhase {
 
     private double temperature;
     private double flow;
-    private double weight;
     private Long time;
 
     public DistillationPlan getPlan() {
@@ -77,15 +76,6 @@ public class DistillationPhase {
 
     public DistillationPhase setFlow(double flow) {
         this.flow = flow;
-        return this;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public DistillationPhase setWeight(double weight) {
-        this.weight = weight;
         return this;
     }
 

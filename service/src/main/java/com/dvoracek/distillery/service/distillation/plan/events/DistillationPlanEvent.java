@@ -11,6 +11,10 @@ public class DistillationPlanEvent extends ApplicationEvent {
         this.distillationPlanDto = distillationPlanDto;
     }
 
+    public DistillationPlanEvent(DistillationPlanEventPublisher distillationPlanEventPublisher) {
+        super(distillationPlanEventPublisher);
+    }
+
     public DistillationPlanDto getDistillationPlanDto() {
         return distillationPlanDto;
     }

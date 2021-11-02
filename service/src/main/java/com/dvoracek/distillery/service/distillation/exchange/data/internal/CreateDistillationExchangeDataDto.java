@@ -12,6 +12,17 @@ public class CreateDistillationExchangeDataDto {
     private boolean terminate;
     private boolean turnOn;
 
+    public String getSource() {
+        return source;
+    }
+
+    public CreateDistillationExchangeDataDto setSource(String source) {
+        this.source = source;
+        return this;
+    }
+
+    private String source;
+
     public double getTemperature() {
         return temperature;
     }

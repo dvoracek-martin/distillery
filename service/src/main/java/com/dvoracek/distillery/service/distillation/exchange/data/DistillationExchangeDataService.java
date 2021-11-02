@@ -20,4 +20,8 @@ public interface DistillationExchangeDataService {
     void setCurrentPlanAndPhaseIdAndNotTerminate(Long distillationPlanId, Long distillationPhaseId, boolean terminate);
 
     void updateTimeLeft(long elapsedTimeInMillis);
+
+    void setTerminated(boolean isTerminated);
+
+    void finishDistillation();
 }

@@ -1,8 +1,8 @@
 package com.dvoracek.distillery.web.distillation.exchange.data;
 
+import com.dvoracek.distillery.service.distillation.exchange.data.DistillationExchangeDataService;
 import com.dvoracek.distillery.service.distillation.exchange.data.internal.CreateDistillationExchangeDataDto;
 import com.dvoracek.distillery.service.distillation.exchange.data.internal.DistillationExchangeDataDto;
-import com.dvoracek.distillery.service.distillation.exchange.data.DistillationExchangeDataService;
 import com.dvoracek.distillery.web.distillation.phase.DistillationPhaseController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,14 +28,14 @@ public class DistillationExchangeDataController {
     @GetMapping("/last")
     @ResponseStatus(HttpStatus.OK)
     public DistillationExchangeDataDto getLastExchangeData() {
-        LOGGER.info("Received Http.GET /api/data/last");
+        LOGGER.debug("Received Http.GET /api/data/last");
         return this.distillationExchangeDataService.findFirstByOrderByIdDesc();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DistillationExchangeDataDto createExchangeData(@RequestBody @Validated CreateDistillationExchangeDataDto createDistillationExchangeDataDto) throws JsonProcessingException {
-        LOGGER.info("Received Http.POST /api/data : {}", new ObjectMapper().writeValueAsString(createDistillationExchangeDataDto));
+        LOGGER.debug("Received Http.POST /api/data : {}", new ObjectMapper().writeValueAsString(createDistillationExchangeDataDto));
         return this.distillationExchangeDataService.createDistillationExchangeData(createDistillationExchangeDataDto);
     }
 }

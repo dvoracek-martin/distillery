@@ -3,7 +3,8 @@ package com.dvoracek.distillery.service.distillation.phase.internal;
 import com.dvoracek.distillery.domain.phase.DistillationPhase;
 import com.dvoracek.distillery.domain.phase.DistillationPhaseRepository;
 import com.dvoracek.distillery.domain.plan.DistillationPlanRepository;
-import com.dvoracek.distillery.service.distillation.phase.*;
+import com.dvoracek.distillery.service.distillation.phase.DistillationPhaseService;
+import com.dvoracek.distillery.service.distillation.plan.events.DistillationPlanEventPublisher;
 import com.dvoracek.distillery.service.distillation.plan.internal.DistillationPlanNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,14 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
 
     private final DistillationPhaseRepository distillationPhaseRepository;
     private final DistillationPlanRepository distillationPlanRepository;
+    private final DistillationPlanEventPublisher distillationPlanEventPublisher;
 
-    public DefaultDistillationPhaseService(DistillationPhaseRepository distillationPhaseRepository, DistillationPlanRepository distillationPlanRepository) {
+    public DefaultDistillationPhaseService(DistillationPhaseRepository distillationPhaseRepository, DistillationPlanRepository distillationPlanRepository, DistillationPlanEventPublisher distillationPlanEventPublisher) {
         this.distillationPhaseRepository = distillationPhaseRepository;
         this.distillationPlanRepository = distillationPlanRepository;
+        this.distillationPlanEventPublisher = distillationPlanEventPublisher;
     }
+
     @Override
     public List<DistillationPhaseDto> getAll() {
         return distillationPhaseRepository.findAll().stream()
@@ -39,10 +43,12 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
         LOGGER.info("Phase updated. ID: {}, name: {}", distillationPhase.getId(), distillationPhase.getName());
         return DistillationPhaseDto.toDistillationPhaseDto(distillationPhase);
     }
+
     @Override
     public DistillationPhaseDto getDistillationPhase(Long id) {
         return DistillationPhaseDto.toDistillationPhaseDto((distillationPhaseRepository.findById(id)).orElseThrow(() -> new DistillationPhaseNotFoundException(id)));
     }
+
     @Override
     public DistillationPhaseDto createDistillationPhase(CreateDistillationPhaseDto createDistillationPhaseDto) {
         DistillationPhase distillationPhase = new DistillationPhase();
@@ -51,7 +57,6 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
                 -> new DistillationPlanNotFoundException(createDistillationPhaseDto.getPlanId())));
         distillationPhase.setTemperature(createDistillationPhaseDto.getTemperature());
         distillationPhase.setFlow(createDistillationPhaseDto.getFlow());
-        distillationPhase.setWeight(createDistillationPhaseDto.getVolume());
         distillationPhase.setTime(createDistillationPhaseDto.getTime());
         return DistillationPhaseDto.toDistillationPhaseDto(distillationPhaseRepository.save(distillationPhase));
     }
@@ -59,6 +64,11 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
     @Override
     public void deleteDistillationPhase(Long id) {
         distillationPlanRepository.delete(distillationPlanRepository.findById(id).orElseThrow(() -> new DistillationPlanNotFoundException(id)));
+    }
+
+    @Override
+    public void jumpToNextPhase() {
+        distillationPlanEventPublisher.publishDistillationPlanJumpToNextPhase();
     }
 
     private DistillationPhase findById(Long id) {

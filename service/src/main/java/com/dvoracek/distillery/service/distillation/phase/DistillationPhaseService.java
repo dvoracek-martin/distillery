@@ -16,4 +16,6 @@ public interface DistillationPhaseService {
     DistillationPhaseDto createDistillationPhase(CreateDistillationPhaseDto createDistillationPhaseDto);
 
     void deleteDistillationPhase(Long id);
+
+    void jumpToNextPhase();
 }

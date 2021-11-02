@@ -62,4 +62,11 @@ public class DistillationPhaseController {
         LOGGER.debug("Received Http.GET /api/getAll");
         return this.distillationPhaseService.getAll();
     }
+
+    @PostMapping("/next")
+    @ResponseStatus(HttpStatus.OK)
+    public void jumpToNextPhase() {
+        LOGGER.debug("Received Http.POST /api/phase/post");
+        this.distillationPhaseService.jumpToNextPhase();
+    }
 }

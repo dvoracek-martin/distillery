@@ -8,7 +8,6 @@ public class UpdateDistillationPhaseDto {
     private Long id;
     private double temperature;
     private double flow;
-    private double volume;
     private Long time;
 
     public String getName() {
@@ -53,15 +52,6 @@ public class UpdateDistillationPhaseDto {
 
     public UpdateDistillationPhaseDto setFlow(double flow) {
         this.flow = flow;
-        return this;
-    }
-
-    public double getVolume() {
-        return volume;
-    }
-
-    public UpdateDistillationPhaseDto setVolume(double volume) {
-        this.volume = volume;
         return this;
     }
 

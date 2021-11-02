@@ -7,7 +7,6 @@ public class CreateDistillationPhaseDto {
     private Long planId;
     private double temperature;
     private double flow;
-    private double volume;
     private Long time;
 
     public Long getPlanId() {
@@ -43,15 +42,6 @@ public class CreateDistillationPhaseDto {
 
     public CreateDistillationPhaseDto setFlow(double flow) {
         this.flow = flow;
-        return this;
-    }
-
-    public double getVolume() {
-        return volume;
-    }
-
-    public CreateDistillationPhaseDto setVolume(double volume) {
-        this.volume = volume;
         return this;
     }
 

@@ -10,7 +10,6 @@ public class DistillationPhaseDto {
     private Long planId;
     private double temperature;
     private double flow;
-    private double volume;
     private Long time;
 
     public Long getId() {
@@ -58,14 +57,6 @@ public class DistillationPhaseDto {
         return this;
     }
 
-    public double getVolume() {
-        return volume;
-    }
-
-    public DistillationPhaseDto setVolume(double volume) {
-        this.volume = volume;
-        return this;
-    }
 
     public Long getTime() {
         return time;
@@ -82,7 +73,6 @@ public class DistillationPhaseDto {
                 .setName(distillationPhase.getName())
                 .setTemperature(distillationPhase.getTemperature())
                 .setFlow(distillationPhase.getFlow())
-                .setVolume(distillationPhase.getWeight())
                 .setPlanId(distillationPhase.getPlan().getId())
                 .setTime(distillationPhase.getTime());
     }
