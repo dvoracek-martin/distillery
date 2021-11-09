@@ -143,6 +143,7 @@ public class DistillationPlanTask implements ApplicationListener<DistillationPla
             this.startDistillation();
             LOGGER.info("Start of a distillation plan");
         } else if (event instanceof DistillationPlanEndEvent) {
+            distillationExchangeDataService.finishDistillation();
             LOGGER.info("End of a distillation plan");
         } else if (event instanceof DistillationPlanUpdatedEvent) {
             this.distillationPlanDto = event.getDistillationPlanDto();

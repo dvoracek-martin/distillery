@@ -18,4 +18,6 @@ public interface DistillationPlanService {
     void deleteDistillationPlan(Long id);
 
     void startDistillation(DistillationPlanDto distillationPlanDto);
+
+    void terminateDistillation(DistillationPlanDto distillationPlanDto);
 }

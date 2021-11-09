@@ -123,6 +123,11 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         distillationPlanEventPublisher.publishDistillationPlanStartEvent(distillationPlanDto);
     }
 
+    @Override
+    public void terminateDistillation(DistillationPlanDto distillationPlanDto) {
+        distillationPlanEventPublisher.publishDistillationPlanEndEvent(distillationPlanDto);
+    }
+
 
     private DistillationPlan findById(Long id) {
         return distillationPlanRepository.findById(id).orElseThrow(() -> new DistillationPlanNotFoundException(id));

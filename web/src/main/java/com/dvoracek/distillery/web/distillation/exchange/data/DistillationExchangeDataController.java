@@ -38,4 +38,11 @@ public class DistillationExchangeDataController {
         LOGGER.debug("Received Http.POST /api/data : {}", new ObjectMapper().writeValueAsString(createDistillationExchangeDataDto));
         return this.distillationExchangeDataService.createDistillationExchangeData(createDistillationExchangeDataDto);
     }
+
+    @DeleteMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAllExchangeData() {
+        LOGGER.debug("Received Delete Request /api/data");
+        this.distillationExchangeDataService.deleteAll();
+    }
 }

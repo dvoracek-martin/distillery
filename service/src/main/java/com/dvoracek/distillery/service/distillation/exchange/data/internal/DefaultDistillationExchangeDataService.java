@@ -108,13 +108,14 @@ public class DefaultDistillationExchangeDataService implements DistillationExcha
 
     @Override
     public void finishDistillation() {
-        getLast()
-                .setTurnOn(false)
-                .setWaiting(false)
-                .setTerminate(true)
-                .setTimestamp(Instant.now().toEpochMilli());
+        DistillationExchangeData lastExchangeData = getLast();
+        if (lastExchangeData != null) {
+            lastExchangeData.setTurnOn(false)
+                    .setWaiting(false)
+                    .setTerminate(true)
+                    .setTimestamp(Instant.now().toEpochMilli());
+        }
         distillationLock = false;
-        distillationExchangeDataRepository.deleteAll();
     }
 
     private DistillationExchangeData getLast() {

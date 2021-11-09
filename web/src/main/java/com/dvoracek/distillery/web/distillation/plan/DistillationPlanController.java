@@ -69,4 +69,11 @@ public class DistillationPlanController {
         LOGGER.debug("Received Http.POST /api/plan/start : {}", new ObjectMapper().writeValueAsString("distillationPlanDto"));
         this.distillationPlanService.startDistillation(distillationPlanDto);
     }
+
+    @PostMapping("/terminate")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void terminatePlan(@RequestBody @Validated DistillationPlanDto distillationPlanDto) throws JsonProcessingException {
+        LOGGER.debug("Received Http.POST /api/plan/terminate : {}", new ObjectMapper().writeValueAsString("distillationPlanDto"));
+        this.distillationPlanService.terminateDistillation(distillationPlanDto);
+    }
 }
