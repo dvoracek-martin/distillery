@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+#show sql statement
+logging:
+  level:
+    org.hibernate.SQL: INFO
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  banner:
+    location: banner.txt
+  liquibase:
+    change-log: db.changelog/db.changelog-master.yaml
+    enabled: true
+  kafka:
+    bootstrap-servers: localhost:29092
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/distillery
+    username: admin
+    password: secret
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        event:
+          merge:
+            entity_copy_observer: allow
+      hibernate.jdbc.lob.non_contextual_creation: true
+
+  jackson:
+    generator:
+      write_numbers_as_strings: true
+    serialization:
+      write_dates_as_timestamps: false
+    deserialization:
+      fail_on_unknown_properties: false
+      fail_on_numbers_for_enums: true

@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Martin Dvoracek
+      changes:
+        - createTable:
+            tableName: t_distillation_phase
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: plan
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: temperature
+                  type: decimal
+              - column:
+                  name: flow
+                  type: integer
+              - column:
+                  name: time
+                  type: bigint
