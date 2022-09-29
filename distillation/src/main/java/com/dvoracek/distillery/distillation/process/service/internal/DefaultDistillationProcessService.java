@@ -94,7 +94,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
     @Override
     public DistillationProcessDataToFrontendDto getDataForFrontend() {
         if (this.currentDistillationPlan == null) {
-            DistillationProcessDataToFrontendDto distillationProcessDataToFrontendDto= new DistillationProcessDataToFrontendDto();
+            DistillationProcessDataToFrontendDto distillationProcessDataToFrontendDto = new DistillationProcessDataToFrontendDto();
             distillationProcessDataToFrontendDto.setTerminated(true);
             return distillationProcessDataToFrontendDto;
         }
@@ -136,7 +136,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
             ObjectMapper objectMapper = new ObjectMapper();
             kafkaTemplate.send("distillation-progress-backend", objectMapper.writeValueAsString(timeElapsedInMillis));
             if (distillationProcessDataFromRaspiDto != null) {
-                System.out.println("Time left: " + (currentDistillationPhase.getTime() - timeElapsedInMillis));
+                LOGGER.info("Time left: " + (currentDistillationPhase.getTime() - timeElapsedInMillis));
                 if (currentDistillationPhase.getTime() - timeElapsedInMillis < 0) {
                     kafkaTemplate.send("distillation-next-phase", Long.toString(distillationPlan.getId()));
                 }

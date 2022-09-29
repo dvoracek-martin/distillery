@@ -90,7 +90,8 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
                 phase.setPlan(distillationPlan);
                 distillationPlan.getDistillationPhases().add(phase);
             } else {
-                distillationPlan.getDistillationPhases().add(distillationPhaseService.findById(distillationPhase.getId()));
+                //  distillationPlan.getDistillationPhases().add(distillationPhaseService.findById(distillationPhase.getId()));
+                distillationPlan.getDistillationPhases().addAll(distillationPhases);
 
             }
         }

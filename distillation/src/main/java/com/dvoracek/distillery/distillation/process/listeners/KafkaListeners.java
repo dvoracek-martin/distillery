@@ -19,18 +19,15 @@ public class KafkaListeners {
     @KafkaListener(topics = "distillation-started", groupId = "distillery-backend")
     void distillationStartedListener(String data) {
         distillationProcessService.startDistillation(Long.parseLong(data));
-        System.out.println("Received " + data);
     }
 
     @KafkaListener(topics = "distillation-plan-edited", groupId = "distillery-backend")
     void distillationEditedListener(String data) {
         distillationProcessService.shallReloadDistillationPlan(true);
-        System.out.println("Received " + data);
     }
 
     @KafkaListener(topics = "distillation-progress-raspberry", groupId = "distillery-backend")
     void distillationProcessRaspberryListener(String data) {
-//        System.out.println("Received from raspi" + data);
         ObjectMapper objectMapper = new ObjectMapper();
         DistillationProcessDataFromRaspiDto distillationProcessDataFromRaspiDto;
         try {
