@@ -52,9 +52,8 @@ public class DistillationPlan {
         return name;
     }
 
-    public DistillationPlan setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public String getDescription() {

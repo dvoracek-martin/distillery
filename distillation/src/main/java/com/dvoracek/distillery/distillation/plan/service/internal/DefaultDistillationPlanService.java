@@ -1,13 +1,12 @@
 package com.dvoracek.distillery.distillation.plan.service.internal;
 
-import com.dvoracek.distillery.distillation.phase.repository.DistillationPhaseRepository;
-import com.dvoracek.distillery.distillation.phase.service.DistillationPhaseService;
-import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
-import com.dvoracek.distillery.distillation.plan.repository.DistillationPlanRepository;
 import com.dvoracek.distillery.distillation.phase.model.DistillationPhase;
+import com.dvoracek.distillery.distillation.phase.service.DistillationPhaseService;
 import com.dvoracek.distillery.distillation.phase.service.internal.CreateDistillationPhaseDto;
 import com.dvoracek.distillery.distillation.phase.service.internal.DistillationPhaseDto;
 import com.dvoracek.distillery.distillation.phase.service.internal.EditDistillationPhaseDto;
+import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
+import com.dvoracek.distillery.distillation.plan.repository.DistillationPlanRepository;
 import com.dvoracek.distillery.distillation.plan.service.DistillationPlanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

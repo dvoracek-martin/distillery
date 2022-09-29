@@ -5,7 +5,6 @@ import com.dvoracek.distillery.distillation.process.service.internal.Distillatio
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 
 @Controller
 public class DistillationProcessController {

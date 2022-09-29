@@ -35,9 +35,8 @@ public class DistillationPhase {
         return plan;
     }
 
-    public DistillationPhase setPlan(DistillationPlan plan) {
+    public void setPlan(DistillationPlan plan) {
         this.plan = plan;
-        return this;
     }
 
     public DistillationPhase() {
@@ -55,9 +54,8 @@ public class DistillationPhase {
         return name;
     }
 
-    public DistillationPhase setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public double getTemperature() {
