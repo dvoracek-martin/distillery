@@ -82,21 +82,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         distillationPlan.setDescription(editDistillationPlanDto.getDescription());
         List<DistillationPhase> distillationPhases = editDistillationPhases(distillationPlan, editDistillationPlanDto.getDistillationPhases());
         distillationPlan.getDistillationPhases().clear();
-        for (DistillationPhase distillationPhase : distillationPhases) {
-            if (distillationPhase.getId() == null) {
-                DistillationPhase phase = distillationPhaseService.createDistillationPhase(new CreateDistillationPhaseDto()
-                        .setName(distillationPhase.getName())
-                        .setTemperature(distillationPhase.getTemperature())
-                        .setFlow(distillationPhase.getFlow())
-                        .setTime(distillationPhase.getTime()));
-                phase.setPlan(distillationPlan);
-                distillationPlan.getDistillationPhases().add(phase);
-            } else {
-                //  distillationPlan.getDistillationPhases().add(distillationPhaseService.findById(distillationPhase.getId()));
-                distillationPlan.getDistillationPhases().addAll(distillationPhases);
-
-            }
-        }
+        distillationPlan.getDistillationPhases().addAll(distillationPhases);
         distillationPlanRepository.saveAndFlush(distillationPlan);
         LOGGER.info("Plan edit. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
         distillationPlan.getDistillationPhases()
