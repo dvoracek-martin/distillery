@@ -108,34 +108,35 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
         isTerminated = false;
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
-            while (!isTerminated) {
-                if (this.isDistillationPlanDirty) {
-                    this.currentDistillationPlan = distillationPlanRepository.findById(this.currentDistillationPlan.getId()).orElseThrow(() -> new DistillationPlanNotFoundException(this.currentDistillationPlan.getId()));
-                    this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().stream().filter(phase -> this.currentDistillationPhase.getId().equals(phase.getId())).findAny().orElse(null);
-                    this.currentDistillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
-                    this.isDistillationPlanDirty = false;
+            if (isTerminated) {
+                executor.shutdown();
+            }
+            if (this.isDistillationPlanDirty) {
+                this.currentDistillationPlan = distillationPlanRepository.findById(this.currentDistillationPlan.getId()).orElseThrow(() -> new DistillationPlanNotFoundException(this.currentDistillationPlan.getId()));
+                this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().stream().filter(phase -> this.currentDistillationPhase.getId().equals(phase.getId())).findAny().orElse(null);
+                this.currentDistillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
+                this.isDistillationPlanDirty = false;
+            }
+            this.timeElapsedInMillis = System.currentTimeMillis() - timeStartedInMillis;
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                kafkaTemplate.send("distillation-progress-backend", objectMapper.writeValueAsString(timeElapsedInMillis));
+            } catch (JsonProcessingException e) {
+                LOGGER.error(e.getMessage());
+            }
+            if (distillationProcessDataFromRaspiDto != null) {
+                LOGGER.info("Time left: " + (currentDistillationPhase.getTime() - timeElapsedInMillis));
+                if (currentDistillationPhase.getTime() - timeElapsedInMillis < 0) {
+                    kafkaTemplate.send("distillation-next-phase", Long.toString(distillationPlan.getId()));
                 }
-                this.timeElapsedInMillis = System.currentTimeMillis() - timeStartedInMillis;
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    kafkaTemplate.send("distillation-progress-backend", objectMapper.writeValueAsString(timeElapsedInMillis));
-                } catch (JsonProcessingException e) {
-                    LOGGER.error(e.getMessage());
-                }
-                if (distillationProcessDataFromRaspiDto != null) {
-                    LOGGER.info("Time left: " + (currentDistillationPhase.getTime() - timeElapsedInMillis));
-                    if (currentDistillationPhase.getTime() - timeElapsedInMillis < 0) {
-                        kafkaTemplate.send("distillation-next-phase", Long.toString(distillationPlan.getId()));
-                    }
-                    if (distillationProcessDataFromRaspiDto.getTemperature() >= currentDistillationPhase.getTemperature() || distillationProcessDataFromRaspiDto.getFlow() >= currentDistillationPhase.getFlow()) {
-                        this.isEnergyOn = false;
-                        this.isPaused = true;
-                        kafkaTemplate.send("distillation-paused", Long.toString(distillationPlan.getId()));
-                    } else {
-                        this.isEnergyOn = true;
-                        this.isPaused = false;
-                        kafkaTemplate.send("distillation-continued", Long.toString(distillationPlan.getId()));
-                    }
+                if (distillationProcessDataFromRaspiDto.getTemperature() >= currentDistillationPhase.getTemperature() || distillationProcessDataFromRaspiDto.getFlow() >= currentDistillationPhase.getFlow()) {
+                    this.isEnergyOn = false;
+                    this.isPaused = true;
+                    kafkaTemplate.send("distillation-paused", Long.toString(distillationPlan.getId()));
+                } else {
+                    this.isEnergyOn = true;
+                    this.isPaused = false;
+                    kafkaTemplate.send("distillation-continued", Long.toString(distillationPlan.getId()));
                 }
             }
         }, 0, 1000, TimeUnit.MILLISECONDS);
