@@ -14,6 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,12 +50,15 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         DistillationPlan distillationPlan = new DistillationPlan();
         distillationPlan.setName(createDistillationPlanDto.getName());
         distillationPlan.setDescription(createDistillationPlanDto.getDescription());
+        List<DistillationPhase>distillationPhases = new ArrayList<>();
         if (!createDistillationPlanDto.getDistillationPhases().isEmpty()) {
             for (CreateDistillationPhaseDto createDistillationPhaseDto : createDistillationPlanDto.getDistillationPhases()) {
                 DistillationPhase distillationPhase = distillationPhaseService.createDistillationPhase(createDistillationPhaseDto);
                 distillationPhase.setPlan(distillationPlan);
+                distillationPhases.add(distillationPhase);
             }
         }
+        distillationPlan.setDistillationPhases(distillationPhases);
         distillationPlan = distillationPlanRepository.saveAndFlush(distillationPlan);
         kafkaTemplate.send("distillation-plan-created", Long.toString(distillationPlan.getId()));
         LOGGER.info("Plan created. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
