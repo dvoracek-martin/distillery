@@ -37,10 +37,4 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
     public DistillationPhase findById(Long id) {
         return distillationPhaseRepository.findById(id).orElseThrow(() -> new DistillationPhaseNotFoundException(id));
     }
-
-    @Override
-    public void delete(Long id) {
-        distillationPhaseRepository.delete(findById(id));
-        distillationPhaseRepository.flush();
-    }
 }
