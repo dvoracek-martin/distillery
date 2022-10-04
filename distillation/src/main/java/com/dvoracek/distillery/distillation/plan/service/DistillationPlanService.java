@@ -20,4 +20,6 @@ public interface DistillationPlanService {
     void startDistillation(DistillationPlanDto distillationPlanDto);
 
     void terminateDistillation(DistillationPlanDto distillationPlanDto);
+
+    void jumpToNextPhase(DistillationPlanDto distillationPlanDto);
 }

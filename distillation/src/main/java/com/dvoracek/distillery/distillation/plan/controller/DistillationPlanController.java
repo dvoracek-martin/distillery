@@ -76,4 +76,11 @@ public class DistillationPlanController {
         LOGGER.debug("Received Http.POST /api/plan/terminate : {}", new ObjectMapper().writeValueAsString("distillationPlanDto"));
         this.distillationPlanService.terminateDistillation(distillationPlanDto);
     }
+
+    @PostMapping("/next")
+    @ResponseStatus(HttpStatus.OK)
+    public void jumpToNextPhase(@RequestBody @Validated DistillationPlanDto distillationPlanDto) {
+        LOGGER.debug("Received Http.POST /api/phase/post");
+        this.distillationPlanService.jumpToNextPhase(distillationPlanDto);
+    }
 }
