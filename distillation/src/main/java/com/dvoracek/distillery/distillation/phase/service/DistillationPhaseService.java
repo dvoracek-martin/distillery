@@ -8,6 +8,4 @@ public interface DistillationPhaseService {
     DistillationPhase createDistillationPhase(CreateDistillationPhaseDto createDistillationPhaseDto);
 
     DistillationPhase findById(Long id);
-
-    void delete(Long id);
 }

@@ -125,7 +125,6 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
                 LOGGER.error(e.getMessage());
             }
             if (distillationProcessDataFromRaspiDto != null) {
-                LOGGER.info("Time left: " + (currentDistillationPhase.getTime() - timeElapsedInMillis));
                 if (currentDistillationPhase.getTime() - timeElapsedInMillis < 0) {
                     kafkaTemplate.send("distillation-next-phase", Long.toString(distillationPlan.getId()));
                 }
