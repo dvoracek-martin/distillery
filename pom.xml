@@ -92,7 +92,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>DistilleryApplication</mainClass>
+                    <mainClass> com.dvoracek.distillery.phase.distillery.core.DistilleryApplication</mainClass>
                     <addResources>true</addResources>
                     <classifier>exec</classifier>
                 </configuration>
