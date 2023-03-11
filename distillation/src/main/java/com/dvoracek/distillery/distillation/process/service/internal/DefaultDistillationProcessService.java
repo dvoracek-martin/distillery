@@ -22,7 +22,6 @@ import static java.util.Comparator.comparing;
 
 @Service
 public class DefaultDistillationProcessService implements DistillationProcessService {
-    private static final int TICK_INTERVAL = 3000;
     private long timeStartedInMillis;
     private Double alcLevel;
     private boolean isTerminated;

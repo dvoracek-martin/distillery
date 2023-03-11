@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Martin Dvoracek
+      changes:
+        - createTable:
+            tableName: t_distillation_procedure
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: distillationPlanId
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: distillationPlanName
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: attemptNumber
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: distillationTimeStart
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: distillationTimeEnd
+                  type:  timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: distillationEndReason
+                  type: varchar(255)
+                  constraints:
+                    nullable: false

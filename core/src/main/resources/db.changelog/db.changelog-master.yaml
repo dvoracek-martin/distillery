@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db.changelog/create-distillation-plan.yml
   - include:
       file: db.changelog/create-distillation-phase.yml
+  - include:
+      file: db.changelog/create-distillation-procedure.yml
