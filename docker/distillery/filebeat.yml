@@ -1,27 +1,11 @@
-filebeat.prospectors:
-  - paths:
-      - /apache-logs/access.log
-    tags:
-      - testenv
-      - apache_access
-    input_type: log
-    document_type: apache_access
-    fields_under_root: true
+filebeat.inputs:
+  - type: kafka
+    hosts:
+      - PLAINTEXT://kafka:9092
+    topics: ["distillation-progress-raspberry"]
+    client_id: "filebeat"
+    group_id: "filebeat"
 
-  - paths:
-      - /apache-logs/error.log
-    tags:
-      - testenv
-      - apache_error
-    input_type: log
-    document_type: apache_error
-    fields_under_root: true
 
-output.kafka:
-  hosts: ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
-  topic: 'log'
-  partition.round_robin:
-    reachable_only: false
-  required_acks: 1
-  compression: gzip
-  max_message_bytes: 1000000
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]

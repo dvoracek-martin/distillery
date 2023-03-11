@@ -43,3 +43,35 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    depends_on:
+      - kafka
+    ports:
+      - '9200:9200'
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  kibana:
+    image: kibana:7.9.2
+    depends_on:
+      - elasticsearch
+    ports:
+      - '5601:5601'
+
+  logstash:
+    depends_on:
+      - elasticsearch
+    image: logstash:7.9.2
+    ports:
+      - '5000:5000'
+    volumes:
+      - type: bind
+        source: ./logstash_pipeline/
+        target: /usr/share/logstash/pipeline
+        read_only: true
