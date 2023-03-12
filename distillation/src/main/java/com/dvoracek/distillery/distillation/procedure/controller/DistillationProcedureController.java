@@ -2,6 +2,8 @@ package com.dvoracek.distillery.distillation.procedure.controller;
 
 import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedureDto;
 import com.dvoracek.distillery.distillation.procedure.service.DistillationProcedureService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,12 +45,12 @@ public class DistillationProcedureController {
 //        return this.distillationPlanService.createDistillationPlan(createDistillationPlanDto);
 //    }
 //
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void deletePlan(@PathVariable("id") Long id) throws JsonProcessingException {
-//        LOGGER.debug("Received Delete Request /api/plan : {}", new ObjectMapper().writeValueAsString(id));
-//        this.distillationPlanService.deleteDistillationPlan(id);
-//    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteProcedure(@PathVariable("id") Long id) throws JsonProcessingException {
+        LOGGER.debug("Received Delete Request /api/procedure : {}", new ObjectMapper().writeValueAsString(id));
+        this.distillationProcedureService.deleteDistillationProcedure(id);
+    }
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)

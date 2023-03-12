@@ -8,6 +8,7 @@ import com.dvoracek.distillery.distillation.procedure.repository.DistillationPro
 import com.dvoracek.distillery.distillation.procedure.service.DistillationProcedureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,7 +23,6 @@ import static java.util.Comparator.comparing;
 public class DefaultDistillationProcedureService implements DistillationProcedureService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDistillationProcedureService.class);
-
     private final DistillationProcedureRepository distillationProcedureRepository;
     private final DistillationPlanService distillationPlanService;
 
@@ -89,8 +89,11 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
     }
 
     @Override
-    public DistillationProcedure deleteDistillationProcedure(Long planId) {
-        // TODO
+    public DistillationProcedure deleteDistillationProcedure(Long id) {
+        DistillationProcedure distillationProcedure = distillationProcedureRepository.findById(id).orElseThrow(() -> new DistillationProcedureNotFoundException(id));
+        distillationProcedureRepository.delete(distillationProcedure);
+        // TODO delete entries from ES
+        LOGGER.info("Procedure deleted. ID: {}, plan Id: {}, attempt #: {}", distillationProcedure.getId(), distillationProcedure.getPlanId(), distillationProcedure.getAttemptNumber());
         return null;
     }
 }
