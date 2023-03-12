@@ -32,8 +32,8 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
     }
 
     @Override
-    public DistillationProcedure getDistillationProcedure(Long id) {
-        return distillationProcedureRepository.findById(id).orElseThrow(() -> new DistillationProcedureNotFoundException(id));
+    public DistillationProcedure getDistillationProcedure(Long procedureId) {
+        return distillationProcedureRepository.findById(procedureId).orElseThrow(() -> new DistillationProcedureNotFoundException(procedureId));
     }
 
     @Override
@@ -89,10 +89,9 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
     }
 
     @Override
-    public DistillationProcedure deleteDistillationProcedure(Long id) {
-        DistillationProcedure distillationProcedure = distillationProcedureRepository.findById(id).orElseThrow(() -> new DistillationProcedureNotFoundException(id));
+    public DistillationProcedure deleteDistillationProcedure(Long procedureId) {
+        DistillationProcedure distillationProcedure = distillationProcedureRepository.findById(procedureId).orElseThrow(() -> new DistillationProcedureNotFoundException(procedureId));
         distillationProcedureRepository.delete(distillationProcedure);
-        // TODO delete entries from ES
         LOGGER.info("Procedure deleted. ID: {}, plan Id: {}, attempt #: {}", distillationProcedure.getId(), distillationProcedure.getPlanId(), distillationProcedure.getAttemptNumber());
         return null;
     }

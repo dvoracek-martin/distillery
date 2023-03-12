@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface DistillationProcedureService {
 
-    DistillationProcedure getDistillationProcedure(Long id);
+    DistillationProcedure getDistillationProcedure(Long procedureId);
     DistillationProcedure getByPlanIdAndAttemptNumber(Long planId, int attemptNumber);
     DistillationProcedure getLastByPlan(Long planId);
     List<DistillationProcedure> getAll();
     DistillationProcedure createDistillationProcedure(Long planId);
     DistillationProcedure terminateDistillationProcedure(Long procedureId);
-    DistillationProcedure deleteDistillationProcedure(Long id);
+    DistillationProcedure deleteDistillationProcedure(Long procedureId);
 }

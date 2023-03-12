@@ -24,11 +24,11 @@ public class DistillationProcedureController {
         this.distillationProcedureService = distillationProcedureService;
     }
 
-    @GetMapping("/{planId}")
+    @GetMapping("/{procedureId}")
     @ResponseStatus(HttpStatus.OK)
-    public DistillationProcedureDto getPlan(@PathVariable("planId") Long planId) {
-        LOGGER.debug("Received Http.GET /api/procedure/" + planId);
-        return DistillationProcedureDto.toDistillationProcedureDto(this.distillationProcedureService.getDistillationProcedure(planId));
+    public DistillationProcedureDto getPlan(@PathVariable("procedureId") Long procedureId) {
+        LOGGER.debug("Received Http.GET /api/procedure/" + procedureId);
+        return DistillationProcedureDto.toDistillationProcedureDto(this.distillationProcedureService.getDistillationProcedure(procedureId));
     }
 //
 //    @PutMapping("/{id}")
