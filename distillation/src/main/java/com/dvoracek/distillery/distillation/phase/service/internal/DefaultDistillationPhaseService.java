@@ -5,7 +5,6 @@ import com.dvoracek.distillery.distillation.phase.repository.DistillationPhaseRe
 import com.dvoracek.distillery.distillation.phase.service.DistillationPhaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,11 +23,12 @@ public class DefaultDistillationPhaseService implements DistillationPhaseService
 
     @Override
     public DistillationPhase createDistillationPhase(CreateDistillationPhaseDto createDistillationPhaseDto) {
-        DistillationPhase distillationPhase = new DistillationPhase();
-        distillationPhase.setName(createDistillationPhaseDto.getName());
-        distillationPhase.setTemperature(createDistillationPhaseDto.getTemperature());
-        distillationPhase.setFlow(createDistillationPhaseDto.getFlow());
-        distillationPhase.setTime(createDistillationPhaseDto.getTime());
+        DistillationPhase distillationPhase = new DistillationPhase(
+                createDistillationPhaseDto.getName(),
+                createDistillationPhaseDto.getTemperature(),
+                createDistillationPhaseDto.getFlow(),
+                createDistillationPhaseDto.getTime()
+        );
         LOGGER.info("Phase created. ID: {}, name: {}", distillationPhase.getId(), distillationPhase.getName());
         return distillationPhase;
     }

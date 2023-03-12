@@ -6,6 +6,5 @@ import com.dvoracek.distillery.distillation.phase.service.internal.CreateDistill
 
 public interface DistillationPhaseService {
     DistillationPhase createDistillationPhase(CreateDistillationPhaseDto createDistillationPhaseDto);
-
     DistillationPhase findById(Long id);
 }

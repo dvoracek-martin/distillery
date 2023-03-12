@@ -97,7 +97,8 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
     private List<DistillationPhase> editDistillationPhases(DistillationPlan distillationPlan, List<EditDistillationPhaseDto> distillationPhasesFromDto) {
         return distillationPhasesFromDto
                 .stream()
-                .map(it -> new DistillationPhase(it.getId(), it.getName(), distillationPlan, it.getTemperature(), it.getFlow(), it.getTime())
+                .map(it -> new
+                        DistillationPhase(it.getId(), it.getName(), distillationPlan, it.getTemperature(), it.getFlow(), it.getTime())
                 ).collect(Collectors.toList());
     }
 

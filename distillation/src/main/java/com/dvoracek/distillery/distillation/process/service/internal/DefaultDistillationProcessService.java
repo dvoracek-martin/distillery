@@ -70,16 +70,18 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
 
     @Override
     public void nextPhase() {
-        Long planId = this.currentDistillationPlan.getId();
-        this.currentDistillationPlan = distillationPlanRepository.findById(planId).orElseThrow(() -> new DistillationPlanNotFoundException(planId));
-        this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().stream().filter(phase -> this.currentDistillationPhase.getId().equals(phase.getId())).findAny().orElse(null);
-        this.currentDistillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
-        int indexOfCurrentPhase = currentDistillationPlan.getDistillationPhases().indexOf(this.currentDistillationPhase);
-        if (indexOfCurrentPhase == currentDistillationPlan.getDistillationPhases().size() - 1) {
-            this.kafkaTemplate.send("distillation-terminated", Long.toString(planId));
-        } else {
-            this.timeStartedInMillis = System.currentTimeMillis();
-            this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().get(++indexOfCurrentPhase);
+        if (this.currentDistillationPlan!= null) {
+            Long planId = this.currentDistillationPlan.getId();
+            this.currentDistillationPlan = distillationPlanRepository.findById(planId).orElseThrow(() -> new DistillationPlanNotFoundException(planId));
+            this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().stream().filter(phase -> this.currentDistillationPhase.getId().equals(phase.getId())).findAny().orElse(null);
+            this.currentDistillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
+            int indexOfCurrentPhase = currentDistillationPlan.getDistillationPhases().indexOf(this.currentDistillationPhase);
+            if (indexOfCurrentPhase == currentDistillationPlan.getDistillationPhases().size() - 1) {
+                this.kafkaTemplate.send("distillation-terminated", Long.toString(planId));
+            } else {
+                this.timeStartedInMillis = System.currentTimeMillis();
+                this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().get(++indexOfCurrentPhase);
+            }
         }
     }
 

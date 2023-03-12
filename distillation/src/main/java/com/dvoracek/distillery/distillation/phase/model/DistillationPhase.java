@@ -103,4 +103,11 @@ public class DistillationPhase {
         this.flow = flow;
         this.time = Duration.ofMinutes(time).toMillis();
     }
+
+    public DistillationPhase( String name,  double temperature, double flow, Long time) {
+        this.name = name;
+        this.temperature = temperature;
+        this.flow = flow;
+        this.time = Duration.ofMinutes(time).toMillis();
+    }
 }
