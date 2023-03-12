@@ -14,15 +14,16 @@ public class DistillationPlan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private Long id;
 
     @NotBlank
     @Size(max = 255)
-    @Column()
+    @Column(name="name")
     private String name;
 
     @NotBlank
-    @Column(columnDefinition = "TEXT")
+    @Column(name="description", columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "plan", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
@@ -62,5 +63,25 @@ public class DistillationPlan {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DistillationPlan that)) return false;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return distillationPhases != null ? distillationPhases.equals(that.distillationPhases) : that.distillationPhases == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (distillationPhases != null ? distillationPhases.hashCode() : 0);
+        return result;
     }
 }

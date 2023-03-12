@@ -15,11 +15,12 @@ public class DistillationPhase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", unique = true)
     private Long id;
 
     @NotBlank
     @Size(max = 255)
-    @Column
+    @Column(name="name")
     private String name;
 
     @ManyToOne

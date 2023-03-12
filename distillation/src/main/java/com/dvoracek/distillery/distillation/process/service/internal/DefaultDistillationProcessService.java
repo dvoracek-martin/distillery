@@ -6,6 +6,8 @@ import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 import com.dvoracek.distillery.distillation.plan.repository.DistillationPlanRepository;
 import com.dvoracek.distillery.distillation.plan.service.internal.DistillationPlanDto;
 import com.dvoracek.distillery.distillation.plan.service.internal.DistillationPlanNotFoundException;
+import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedure;
+import com.dvoracek.distillery.distillation.procedure.service.DistillationProcedureService;
 import com.dvoracek.distillery.distillation.process.service.DistillationProcessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,13 +34,16 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
     private DistillationPlan currentDistillationPlan;
     private boolean isDistillationPlanDirty;
     private long timeElapsedInMillis;
+    private long procedureId;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final DistillationPlanRepository distillationPlanRepository;
+    private final DistillationProcedureService distillationProcedureService;
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDistillationProcessService.class);
 
-    public DefaultDistillationProcessService(KafkaTemplate<String, String> kafkaTemplate, DistillationPlanRepository distillationPlanRepository) {
+    public DefaultDistillationProcessService(KafkaTemplate<String, String> kafkaTemplate, DistillationPlanRepository distillationPlanRepository, DistillationProcedureService distillationProcedureService) {
         this.kafkaTemplate = kafkaTemplate;
         this.distillationPlanRepository = distillationPlanRepository;
+        this.distillationProcedureService = distillationProcedureService;
     }
 
     @Override
@@ -49,6 +54,8 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
             this.currentDistillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
             this.isPaused = false;
             this.isEnergyOn = true;
+            DistillationProcedure distillationProcedure = distillationProcedureService.createDistillationProcedure(planId);
+            procedureId = distillationProcedure.getId();
             startLoop(currentDistillationPlan);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -84,6 +91,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
             this.timeElapsedInMillis = 0;
             this.timeStartedInMillis = 0;
             this.currentDistillationPlan = null;
+            distillationProcedureService.terminateDistillationProcedure(procedureId);
         }
     }
 

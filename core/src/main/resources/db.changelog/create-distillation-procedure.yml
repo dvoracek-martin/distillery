@@ -14,32 +14,20 @@ databaseChangeLog:
                     nullable: false
                     primaryKey: true
               - column:
-                  name: distillationPlanId
-                  type: int
-                  constraints:
-                    nullable: false
+                  name: plan_id
+                  type: bigint
               - column:
-                  name: distillationPlanName
+                  name: plan_name
                   type: varchar(255)
-                  constraints:
-                    nullable: false
               - column:
-                  name: attemptNumber
+                  name: attempt_number
                   type: int
-                  constraints:
-                    nullable: false
               - column:
-                  name: distillationTimeStart
+                  name: time_start
                   type: timestamp
-                  constraints:
-                    nullable: false
               - column:
-                  name: distillationTimeEnd
-                  type:  timestamp
-                  constraints:
-                    nullable: true
+                  name: time_end
+                  type: timestamp
               - column:
-                  name: distillationEndReason
+                  name: end_reason
                   type: varchar(255)
-                  constraints:
-                    nullable: false

@@ -1,17 +1,16 @@
 package com.dvoracek.distillery.distillation.procedure.service;
 
-import com.dvoracek.distillery.distillation.procedure.model.CreateDistillationProcedureDto;
-import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedureDto;
+import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedure;
 
 import java.util.List;
 
 public interface DistillationProcedureService {
 
-    DistillationProcedureDto getDistillationProcedure(Long id);
-
-    List<DistillationProcedureDto> getAll();
-
-    DistillationProcedureDto createDistillationProcedure(CreateDistillationProcedureDto createDistillationProcedureDto);
-
-    void deleteDistillationProcedure(Long id);
+    DistillationProcedure getDistillationProcedure(Long id);
+    DistillationProcedure getByPlanIdAndAttemptNumber(Long planId, int attemptNumber);
+    DistillationProcedure getLastByPlan(Long planId);
+    List<DistillationProcedure> getAll();
+    DistillationProcedure createDistillationProcedure(Long planId);
+    DistillationProcedure terminateDistillationProcedure(Long procedureId);
+    DistillationProcedure deleteDistillationProcedure(Long id);
 }
