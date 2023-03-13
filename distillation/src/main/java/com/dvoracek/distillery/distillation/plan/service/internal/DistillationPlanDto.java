@@ -59,6 +59,13 @@ public class DistillationPlanDto {
                 .setDescription(distillationPlan.getDescription())
                 .setDistillationPhases(distillationPlan.getDistillationPhases()
                         .stream().map(DistillationPhaseDto::toDistillationPhaseDto).collect(Collectors.toList()));
+    }
 
+    public static DistillationPlan fromDistillationPlanDto(DistillationPlanDto distillationPlanDto) {
+        return new DistillationPlan(
+                distillationPlanDto.getId(),
+                distillationPlanDto.getName(),
+                distillationPlanDto.getDescription(),
+                distillationPlanDto.distillationPhases.stream().map(DistillationPhaseDto::fromDistillationPhaseDto).collect(Collectors.toList()));
     }
 }

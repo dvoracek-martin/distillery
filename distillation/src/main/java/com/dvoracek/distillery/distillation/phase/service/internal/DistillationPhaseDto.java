@@ -75,4 +75,14 @@ public class DistillationPhaseDto {
                 .setFlow(distillationPhase.getFlow())
                 .setTime(distillationPhase.getTime());
     }
+
+    public static DistillationPhase fromDistillationPhaseDto(DistillationPhaseDto distillationPhaseDto) {
+        return new DistillationPhase(
+                distillationPhaseDto.getId(),
+                distillationPhaseDto.getName(),
+                distillationPhaseDto.getTemperature(),
+                distillationPhaseDto.getFlow(),
+                distillationPhaseDto.getTime());
+    }
+
 }

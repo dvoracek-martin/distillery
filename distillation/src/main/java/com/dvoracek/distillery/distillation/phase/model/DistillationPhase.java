@@ -20,7 +20,7 @@ public class DistillationPhase {
 
     @NotBlank
     @Size(max = 255)
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @ManyToOne
@@ -32,12 +32,12 @@ public class DistillationPhase {
     private double flow;
     private Long time;
 
-    public DistillationPlan getPlan() {
-        return plan;
-    }
-
-    public void setPlan(DistillationPlan plan) {
-        this.plan = plan;
+    public DistillationPhase(Long id, String name, double temperature, double flow, Long time) {
+        this.id = id;
+        this.name = name;
+        this.temperature = temperature;
+        this.flow = flow;
+        this.time = time;
     }
 
     public DistillationPhase() {
@@ -47,40 +47,54 @@ public class DistillationPhase {
         return id;
     }
 
-    public void setId(Long id) {
+    public DistillationPhase setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public DistillationPhase setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public DistillationPlan getPlan() {
+        return plan;
+    }
+
+    public DistillationPhase setPlan(DistillationPlan plan) {
+        this.plan = plan;
+        return this;
     }
 
     public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(double temperature) {
+    public DistillationPhase setTemperature(double temperature) {
         this.temperature = temperature;
+        return this;
     }
 
     public double getFlow() {
         return flow;
     }
 
-    public void setFlow(double flow) {
+    public DistillationPhase setFlow(double flow) {
         this.flow = flow;
+        return this;
     }
 
     public Long getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public DistillationPhase setTime(Long time) {
         this.time = time;
+        return this;
     }
 
     @Override
@@ -104,7 +118,7 @@ public class DistillationPhase {
         this.time = Duration.ofMinutes(time).toMillis();
     }
 
-    public DistillationPhase( String name,  double temperature, double flow, Long time) {
+    public DistillationPhase(String name, double temperature, double flow, Long time) {
         this.name = name;
         this.temperature = temperature;
         this.flow = flow;

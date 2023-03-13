@@ -37,16 +37,16 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         this.distillationPlanRepository = distillationPlanRepository;
     }
 
-    public List<DistillationPlanDto> getAll() {
-        List<DistillationPlanDto> distillationPlanDtos = distillationPlanRepository.findAll().stream().map(DistillationPlanDto::toDistillationPlanDto).collect(Collectors.toList());
-        for (DistillationPlanDto distillationPlanDto : distillationPlanDtos) {
-            distillationPlanDto.getDistillationPhases().sort(comparing(DistillationPhaseDto::getId));
+    public List<DistillationPlan> getAll() {
+        List<DistillationPlan> distillationPlans = distillationPlanRepository.findAll();
+        for (DistillationPlan distillationPlan : distillationPlans) {
+            distillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
         }
-        distillationPlanDtos.sort(comparing(DistillationPlanDto::getId));
-        return distillationPlanDtos;
+        distillationPlans.sort(comparing(DistillationPlan::getId));
+        return distillationPlans;
     }
 
-    public DistillationPlanDto createDistillationPlan(CreateDistillationPlanDto createDistillationPlanDto) {
+    public DistillationPlan createDistillationPlan(CreateDistillationPlanDto createDistillationPlanDto) {
         DistillationPlan distillationPlan = new DistillationPlan();
         distillationPlan.setName(createDistillationPlanDto.getName());
         distillationPlan.setDescription(createDistillationPlanDto.getDescription());
@@ -62,7 +62,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         distillationPlan = distillationPlanRepository.saveAndFlush(distillationPlan);
         kafkaTemplate.send("distillation-plan-created", Long.toString(distillationPlan.getId()));
         LOGGER.info("Plan created. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
-        return DistillationPlanDto.toDistillationPlanDto(distillationPlan);
+        return distillationPlan;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
     }
 
     @Override
-    public DistillationPlanDto editPlan(Long id, EditDistillationPlanDto editDistillationPlanDto) {
+    public DistillationPlan editPlan(Long id, EditDistillationPlanDto editDistillationPlanDto) {
         DistillationPlan distillationPlan = distillationPlanRepository.findById(id).orElseThrow(() -> new DistillationPlanNotFoundException(id));
         distillationPlan.setName(editDistillationPlanDto.getName());
         distillationPlan.setDescription(editDistillationPlanDto.getDescription());
@@ -91,7 +91,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
                     kafkaTemplate.send("distillation-phase-edited", Long.toString(phase.getId()));
                 });
         kafkaTemplate.send("distillation-plan-edited", Long.toString(id));
-        return DistillationPlanDto.toDistillationPlanDto(distillationPlan);
+        return distillationPlan;
     }
 
     private List<DistillationPhase> editDistillationPhases(DistillationPlan distillationPlan, List<EditDistillationPhaseDto> distillationPhasesFromDto) {
@@ -103,25 +103,25 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
     }
 
     @Override
-    public DistillationPlanDto getDistillationPlan(Long id) {
-        return DistillationPlanDto.toDistillationPlanDto((distillationPlanRepository.findById(id)).orElseThrow(() -> new DistillationPlanNotFoundException(id)));
+    public DistillationPlan getDistillationPlan(Long id) {
+        return distillationPlanRepository.findById(id).orElseThrow(() -> new DistillationPlanNotFoundException(id));
     }
 
     @Override
-    public void startDistillation(DistillationPlanDto distillationPlanDto) {
-        kafkaTemplate.send("distillation-started", Long.toString(distillationPlanDto.getId()));
-        LOGGER.info("Distillation started. ID: {}, name: {}", distillationPlanDto.getId(), distillationPlanDto.getName());
+    public void startDistillation(DistillationPlan distillationPlan) {
+        kafkaTemplate.send("distillation-started", Long.toString(distillationPlan.getId()));
+        LOGGER.info("Distillation started. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
     }
 
     @Override
-    public void terminateDistillation(DistillationPlanDto distillationPlanDto) {
-        kafkaTemplate.send("distillation-terminated", Long.toString(distillationPlanDto.getId()));
-        LOGGER.info("Distillation terminated. ID: {}, name: {}", distillationPlanDto.getId(), distillationPlanDto.getName());
+    public void terminateDistillation(DistillationPlan distillationPlan) {
+        kafkaTemplate.send("distillation-terminated", Long.toString(distillationPlan.getId()));
+        LOGGER.info("Distillation terminated. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
     }
 
     @Override
-    public void jumpToNextPhase(DistillationPlanDto distillationPlanDto) {
-        kafkaTemplate.send("distillation-next-phase", Long.toString(distillationPlanDto.getId()));
-        LOGGER.info("Distillation ID: {}, name: {} jumped to the next phase", distillationPlanDto.getId(), distillationPlanDto.getName());
+    public void jumpToNextPhase(DistillationPlan distillationPlan) {
+        kafkaTemplate.send("distillation-next-phase", Long.toString(distillationPlan.getId()));
+        LOGGER.info("Distillation ID: {}, name: {} jumped to the next phase", distillationPlan.getId(), distillationPlan.getName());
     }
 }

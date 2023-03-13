@@ -19,15 +19,22 @@ public class DistillationPlan {
 
     @NotBlank
     @Size(max = 255)
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     @NotBlank
-    @Column(name="description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "plan", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
     private List<DistillationPhase> distillationPhases = new ArrayList<>();
+
+    public DistillationPlan(Long id, String name, String description, List<DistillationPhase> distillationPhases) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.distillationPhases = distillationPhases;
+    }
 
     public List<DistillationPhase> getDistillationPhases() {
         return distillationPhases;
@@ -45,24 +52,27 @@ public class DistillationPlan {
         return id;
     }
 
-    public void setId(Long id) {
+    public DistillationPlan setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public DistillationPlan setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public DistillationPlan setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     @Override

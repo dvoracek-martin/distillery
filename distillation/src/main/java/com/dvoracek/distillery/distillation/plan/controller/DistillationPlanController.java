@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/plan")
@@ -31,21 +32,21 @@ public class DistillationPlanController {
     @ResponseStatus(HttpStatus.OK)
     public DistillationPlanDto getPlan(@PathVariable("id") Long id) {
         LOGGER.debug("Received Http.GET /api/plan/" + id);
-        return this.distillationPlanService.getDistillationPlan(id);
+        return DistillationPlanDto.toDistillationPlanDto(this.distillationPlanService.getDistillationPlan(id));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public DistillationPlanDto editPlan(@PathVariable("id") Long id, @RequestBody @Validated EditDistillationPlanDto editDistillationPlanDto) throws JsonProcessingException {
         LOGGER.debug("Received Http.PUT /api/plan : {} with an id: {}", new ObjectMapper().writeValueAsString(editDistillationPlanDto), id);
-        return this.distillationPlanService.editPlan(id, editDistillationPlanDto);
+        return DistillationPlanDto.toDistillationPlanDto(this.distillationPlanService.editPlan(id, editDistillationPlanDto));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public DistillationPlanDto createPlan(@RequestBody @Validated CreateDistillationPlanDto createDistillationPlanDto) throws JsonProcessingException {
         LOGGER.debug("Received Http.POST /api/plan : {}", new ObjectMapper().writeValueAsString(createDistillationPlanDto));
-        return this.distillationPlanService.createDistillationPlan(createDistillationPlanDto);
+        return DistillationPlanDto.toDistillationPlanDto(this.distillationPlanService.createDistillationPlan(createDistillationPlanDto));
     }
 
     @DeleteMapping("/{id}")
@@ -59,7 +60,7 @@ public class DistillationPlanController {
     @ResponseStatus(HttpStatus.OK)
     public List<DistillationPlanDto> getAllPlans() {
         LOGGER.debug("Received Http.GET /api/getAll");
-        return this.distillationPlanService.getAll();
+        return this.distillationPlanService.getAll().stream().map(DistillationPlanDto::toDistillationPlanDto).collect(Collectors.toList());
     }
 
 
@@ -67,20 +68,20 @@ public class DistillationPlanController {
     @ResponseStatus(HttpStatus.OK)
     public void startPlan(@RequestBody @Validated DistillationPlanDto distillationPlanDto) throws JsonProcessingException {
         LOGGER.debug("Received Http.POST /api/plan/start : {}", new ObjectMapper().writeValueAsString("distillationPlanDto"));
-        this.distillationPlanService.startDistillation(distillationPlanDto);
+        this.distillationPlanService.startDistillation(DistillationPlanDto.fromDistillationPlanDto(distillationPlanDto));
     }
 
     @PostMapping("/terminate")
     @ResponseStatus(HttpStatus.OK)
     public void terminatePlan(@RequestBody @Validated DistillationPlanDto distillationPlanDto) throws JsonProcessingException {
         LOGGER.debug("Received Http.POST /api/plan/terminate : {}", new ObjectMapper().writeValueAsString("distillationPlanDto"));
-        this.distillationPlanService.terminateDistillation(distillationPlanDto);
+        this.distillationPlanService.terminateDistillation(DistillationPlanDto.fromDistillationPlanDto(distillationPlanDto));
     }
 
     @PostMapping("/next")
     @ResponseStatus(HttpStatus.OK)
     public void jumpToNextPhase(@RequestBody @Validated DistillationPlanDto distillationPlanDto) {
         LOGGER.debug("Received Http.POST /api/phase/post");
-        this.distillationPlanService.jumpToNextPhase(distillationPlanDto);
+        this.distillationPlanService.jumpToNextPhase(DistillationPlanDto.fromDistillationPlanDto(distillationPlanDto));
     }
 }

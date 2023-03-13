@@ -1,5 +1,6 @@
 package com.dvoracek.distillery.distillation.procedure.service.internal;
 
+import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 import com.dvoracek.distillery.distillation.plan.service.DistillationPlanService;
 import com.dvoracek.distillery.distillation.plan.service.internal.DistillationPlanDto;
 import com.dvoracek.distillery.distillation.procedure.model.DistillationEndReason;
@@ -55,19 +56,19 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
     public DistillationProcedure createDistillationProcedure(Long planId) {
         DistillationProcedure distillationProcedure = getLastByPlan(planId);
         DistillationProcedure currentDistillationProcedure = new DistillationProcedure();
-        DistillationPlanDto distillationPlanDto = distillationPlanService.getDistillationPlan(planId);
+        DistillationPlan distillationPlan = distillationPlanService.getDistillationPlan(planId);
         if (distillationProcedure == null) {
             distillationProcedure = new DistillationProcedure()
-                    .setPlanId(distillationPlanDto.getId())
-                    .setPlanName(distillationPlanDto.getName())
+                    .setPlanId(distillationPlan.getId())
+                    .setPlanName(distillationPlan.getName())
                     .setTimeStart(LocalDateTime.now())
                     .setAttemptNumber(1)
                     .setEndReason(DistillationEndReason.NOT_DONE);
             currentDistillationProcedure = distillationProcedure;
         } else {
             currentDistillationProcedure
-                    .setPlanId(distillationPlanDto.getId())
-                    .setPlanName(distillationPlanDto.getName())
+                    .setPlanId(distillationPlan.getId())
+                    .setPlanName(distillationPlan.getName())
                     .setTimeStart(LocalDateTime.now())
                     .setAttemptNumber(distillationProcedure.getAttemptNumber() + 1)
                     .setEndReason(DistillationEndReason.NOT_DONE);
