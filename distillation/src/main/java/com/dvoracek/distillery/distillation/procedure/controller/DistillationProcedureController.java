@@ -2,6 +2,7 @@ package com.dvoracek.distillery.distillation.procedure.controller;
 
 import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedureDto;
 import com.dvoracek.distillery.distillation.procedure.service.DistillationProcedureService;
+import com.dvoracek.distillery.distillation.process.service.internal.DistillationProcessDataFromRaspiDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -26,9 +27,15 @@ public class DistillationProcedureController {
 
     @GetMapping("/{procedureId}")
     @ResponseStatus(HttpStatus.OK)
-    public DistillationProcedureDto getPlan(@PathVariable("procedureId") Long procedureId) {
+    public DistillationProcedureDto getProcedure(@PathVariable("procedureId") Long procedureId) {
         LOGGER.debug("Received Http.GET /api/procedure/" + procedureId);
         return DistillationProcedureDto.toDistillationProcedureDto(this.distillationProcedureService.getDistillationProcedure(procedureId));
+    }
+    @GetMapping("/es/{procedureId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<DistillationProcessDataFromRaspiDto> getProcedureDetailsFromES(@PathVariable("procedureId") Long procedureId) {
+        LOGGER.debug("Received Http.GET /api/procedure/es/" + procedureId);
+        return this.distillationProcedureService.getDistillationProcedureFromES(procedureId);
     }
 //
 //    @PutMapping("/{id}")

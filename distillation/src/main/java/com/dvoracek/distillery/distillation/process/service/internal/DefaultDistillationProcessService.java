@@ -34,7 +34,8 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
     private DistillationPlan currentDistillationPlan;
     private boolean isDistillationPlanDirty;
     private long timeElapsedInMillis;
-    private long procedureId;
+
+    private DistillationProcedure distillationProcedure;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final DistillationPlanRepository distillationPlanRepository;
     private final DistillationProcedureService distillationProcedureService;
@@ -54,8 +55,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
             this.currentDistillationPlan.getDistillationPhases().sort(comparing(DistillationPhase::getId));
             this.isPaused = false;
             this.isEnergyOn = true;
-            DistillationProcedure distillationProcedure = distillationProcedureService.createDistillationProcedure(planId);
-            procedureId = distillationProcedure.getId();
+            distillationProcedure = distillationProcedureService.createDistillationProcedure(planId);
             startLoop(currentDistillationPlan);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -70,7 +70,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
 
     @Override
     public void nextPhase() {
-        if (this.currentDistillationPlan!= null) {
+        if (this.currentDistillationPlan != null) {
             Long planId = this.currentDistillationPlan.getId();
             this.currentDistillationPlan = distillationPlanRepository.findById(planId).orElseThrow(() -> new DistillationPlanNotFoundException(planId));
             this.currentDistillationPhase = currentDistillationPlan.getDistillationPhases().stream().filter(phase -> this.currentDistillationPhase.getId().equals(phase.getId())).findAny().orElse(null);
@@ -93,7 +93,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
             this.timeElapsedInMillis = 0;
             this.timeStartedInMillis = 0;
             this.currentDistillationPlan = null;
-            distillationProcedureService.terminateDistillationProcedure(procedureId);
+            distillationProcedureService.terminateDistillationProcedure(distillationProcedure.getPlanId());
         }
     }
 
@@ -127,9 +127,12 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
                 this.isDistillationPlanDirty = false;
             }
             this.timeElapsedInMillis = System.currentTimeMillis() - timeStartedInMillis;
+            DistillationProcessDataToRaspiDto distillationProcessDataToRaspiDto = new DistillationProcessDataToRaspiDto();
+            distillationProcessDataToRaspiDto.setDistillationProcedureId(distillationProcedure.getId());
+            distillationProcessDataToRaspiDto.setTimeStartedInMillis(timeElapsedInMillis);
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                kafkaTemplate.send("distillation-progress-backend", objectMapper.writeValueAsString(timeElapsedInMillis));
+                kafkaTemplate.send("distillation-progress-backend", objectMapper.writeValueAsString(distillationProcessDataToRaspiDto));
             } catch (JsonProcessingException e) {
                 LOGGER.error(e.getMessage());
             }

@@ -45,18 +45,21 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
 
   elasticsearch:
-    image: elasticsearch:7.9.2
+    image: elasticsearch:8.6.2
     depends_on:
       - kafka
     ports:
       - '9200:9200'
     environment:
       - discovery.type=single-node
-      - http.cors.allow-origin=http://localhost:8080,http://127.0.0.1:8080
-      - http.cors.enabled=true
-      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
-      - http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE
-      - http.cors.allow-credentials=true
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+#      - http.cors.allow-origin=http://localhost:29092,http://127.0.0.1:29092
+#      - http.cors.enabled=true
+#      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+#      - http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE
+#      - http.cors.allow-credentials=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -64,7 +67,7 @@ services:
         hard: -1
 
   kibana:
-    image: kibana:7.9.2
+    image: kibana:8.6.2
     depends_on:
       - elasticsearch
     ports:
@@ -73,7 +76,7 @@ services:
   logstash:
     depends_on:
       - elasticsearch
-    image: logstash:7.9.2
+    image: logstash:8.6.2
     ports:
       - '5000:5000'
     volumes:

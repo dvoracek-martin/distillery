@@ -1,19 +1,28 @@
 package com.dvoracek.distillery.distillation.procedure.service.internal;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 import com.dvoracek.distillery.distillation.plan.service.DistillationPlanService;
-import com.dvoracek.distillery.distillation.plan.service.internal.DistillationPlanDto;
 import com.dvoracek.distillery.distillation.procedure.model.DistillationEndReason;
 import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedure;
 import com.dvoracek.distillery.distillation.procedure.repository.DistillationProcedureRepository;
 import com.dvoracek.distillery.distillation.procedure.service.DistillationProcedureService;
+import com.dvoracek.distillery.distillation.process.service.internal.DistillationProcessDataFromRaspiDto;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,20 +67,10 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
         DistillationProcedure currentDistillationProcedure = new DistillationProcedure();
         DistillationPlan distillationPlan = distillationPlanService.getDistillationPlan(planId);
         if (distillationProcedure == null) {
-            distillationProcedure = new DistillationProcedure()
-                    .setPlanId(distillationPlan.getId())
-                    .setPlanName(distillationPlan.getName())
-                    .setTimeStart(LocalDateTime.now())
-                    .setAttemptNumber(1)
-                    .setEndReason(DistillationEndReason.NOT_DONE);
+            distillationProcedure = new DistillationProcedure().setPlanId(distillationPlan.getId()).setPlanName(distillationPlan.getName()).setTimeStart(LocalDateTime.now()).setAttemptNumber(1).setEndReason(DistillationEndReason.NOT_DONE);
             currentDistillationProcedure = distillationProcedure;
         } else {
-            currentDistillationProcedure
-                    .setPlanId(distillationPlan.getId())
-                    .setPlanName(distillationPlan.getName())
-                    .setTimeStart(LocalDateTime.now())
-                    .setAttemptNumber(distillationProcedure.getAttemptNumber() + 1)
-                    .setEndReason(DistillationEndReason.NOT_DONE);
+            currentDistillationProcedure.setPlanId(distillationPlan.getId()).setPlanName(distillationPlan.getName()).setTimeStart(LocalDateTime.now()).setAttemptNumber(distillationProcedure.getAttemptNumber() + 1).setEndReason(DistillationEndReason.NOT_DONE);
         }
         LOGGER.info("Creating a new distillation procedure for plan ID: " + currentDistillationProcedure.getPlanId() + ", attempt #" + currentDistillationProcedure.getAttemptNumber());
         return distillationProcedureRepository.saveAndFlush(currentDistillationProcedure);
@@ -95,5 +94,30 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
         distillationProcedureRepository.delete(distillationProcedure);
         LOGGER.info("Procedure deleted. ID: {}, plan Id: {}, attempt #: {}", distillationProcedure.getId(), distillationProcedure.getPlanId(), distillationProcedure.getAttemptNumber());
         return null;
+    }
+
+    @Override
+    public List<DistillationProcessDataFromRaspiDto> getDistillationProcedureFromES(Long procedureId) {
+
+        // Create the low-level client
+        RestClient restClient = RestClient.builder(new HttpHost("localhost", 9200)).build();
+
+        // Create the transport with a Jackson mapper
+        ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+
+        // And create the API client
+        ElasticsearchClient client = new ElasticsearchClient(transport);
+        SearchResponse<DistillationProcessDataFromRaspiDto> search;
+        try {
+            search = client.search(s -> s.index("distillation-progress-raspberry"), DistillationProcessDataFromRaspiDto.class);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        List<DistillationProcessDataFromRaspiDto> distillationProcessDataFromRaspiDtos = new ArrayList<>();
+        for (Hit<DistillationProcessDataFromRaspiDto> hit : search.hits().hits()) {
+            distillationProcessDataFromRaspiDtos.add(hit.source());
+        }
+        return distillationProcessDataFromRaspiDtos;
     }
 }
