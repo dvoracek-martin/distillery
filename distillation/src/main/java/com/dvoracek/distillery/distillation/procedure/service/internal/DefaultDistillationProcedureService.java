@@ -1,6 +1,8 @@
 package com.dvoracek.distillery.distillation.procedure.service.internal;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldSort;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -98,19 +100,21 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
 
     @Override
     public List<DistillationProcessDataFromRaspiDto> getDistillationProcedureFromES(Long procedureId) {
-
-        // Create the low-level client
         RestClient restClient = RestClient.builder(new HttpHost("localhost", 9200)).build();
-
-        // Create the transport with a Jackson mapper
         ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
-
-        // And create the API client
         ElasticsearchClient client = new ElasticsearchClient(transport);
         SearchResponse<DistillationProcessDataFromRaspiDto> search;
         try {
-            search = client.search(s -> s.index("distillation-progress-raspberry"), DistillationProcessDataFromRaspiDto.class);
-
+            search = client.search(s ->
+                            s.index("distillation-progress-raspberry")
+                                    .query(q -> q.match(t -> t
+                                            .field("distillationProcedureId")
+                                            .query(procedureId)))
+                                    .size(100000)
+                                    .sort(so -> so
+                                            .field(FieldSort.of(f -> f.field("timeStartedInMillis")
+                                            .order(SortOrder.Asc)))),
+                    DistillationProcessDataFromRaspiDto.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

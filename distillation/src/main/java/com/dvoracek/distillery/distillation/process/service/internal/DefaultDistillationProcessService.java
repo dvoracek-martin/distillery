@@ -93,7 +93,7 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
             this.timeElapsedInMillis = 0;
             this.timeStartedInMillis = 0;
             this.currentDistillationPlan = null;
-            distillationProcedureService.terminateDistillationProcedure(distillationProcedure.getPlanId());
+            distillationProcedureService.terminateDistillationProcedure(distillationProcedure.getId());
         }
     }
 
@@ -155,6 +155,5 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
 
     private void init() {
         timeStartedInMillis = System.currentTimeMillis();
-
     }
 }
