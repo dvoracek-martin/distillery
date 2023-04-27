@@ -17,6 +17,22 @@ public class DistillationProcessDataToFrontendDto {
 
     private Double alcLevel;
 
+    public DistillationProcessDataToFrontendDto() {
+    }
+
+    public DistillationProcessDataToFrontendDto(DistillationPlanDto distillationPlanDto, DistillationPhaseDto currentDistillationPhaseDto, double temperature, double flow, double weight, Long timeElapsedInMillis, boolean isTerminated, boolean isPaused, boolean isEnergyOn, Double alcLevel) {
+        this.distillationPlanDto = distillationPlanDto;
+        this.currentDistillationPhaseDto = currentDistillationPhaseDto;
+        this.temperature = temperature;
+        this.flow = flow;
+        this.weight = weight;
+        this.isTerminated = isTerminated;
+        this.isPaused = isPaused;
+        this.isEnergyOn = isEnergyOn;
+        this.timeElapsedInMillis = timeElapsedInMillis;
+        this.alcLevel = alcLevel;
+    }
+
     public DistillationPhaseDto getCurrentDistillationPhaseDto() {
         return currentDistillationPhaseDto;
     }
@@ -94,22 +110,6 @@ public class DistillationProcessDataToFrontendDto {
     }
 
     public void setAlcLevel(Double alcLevel) {
-        this.alcLevel = alcLevel;
-    }
-
-    public DistillationProcessDataToFrontendDto() {
-    }
-
-    public DistillationProcessDataToFrontendDto(DistillationPlanDto distillationPlanDto, DistillationPhaseDto currentDistillationPhaseDto, double temperature, double flow, double weight, Long timeElapsedInMillis, boolean isTerminated, boolean isPaused, boolean isEnergyOn, Double alcLevel) {
-        this.distillationPlanDto = distillationPlanDto;
-        this.currentDistillationPhaseDto = currentDistillationPhaseDto;
-        this.temperature = temperature;
-        this.flow = flow;
-        this.weight = weight;
-        this.isTerminated = isTerminated;
-        this.isPaused = isPaused;
-        this.isEnergyOn = isEnergyOn;
-        this.timeElapsedInMillis = timeElapsedInMillis;
         this.alcLevel = alcLevel;
     }
 }

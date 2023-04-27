@@ -14,17 +14,17 @@ public class EditDistillationPhaseDto {
         return name;
     }
 
+    public EditDistillationPhaseDto setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public Long getId() {
         return id;
     }
 
     public EditDistillationPhaseDto setId(Long id) {
         this.id = id;
-        return this;
-    }
-
-    public EditDistillationPhaseDto setName(String name) {
-        this.name = name;
         return this;
     }
 

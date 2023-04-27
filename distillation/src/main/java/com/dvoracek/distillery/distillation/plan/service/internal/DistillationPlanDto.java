@@ -5,7 +5,6 @@ import com.dvoracek.distillery.distillation.phase.service.internal.DistillationP
 import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DistillationPlanDto {
     private Long id;
@@ -15,6 +14,23 @@ public class DistillationPlanDto {
     private String description;
 
     private List<DistillationPhaseDto> distillationPhases;
+
+    public static DistillationPlanDto toDistillationPlanDto(DistillationPlan distillationPlan) {
+        return new DistillationPlanDto()
+                .setId(distillationPlan.getId())
+                .setName(distillationPlan.getName())
+                .setDescription(distillationPlan.getDescription())
+                .setDistillationPhases(distillationPlan.getDistillationPhases()
+                        .stream().map(DistillationPhaseDto::toDistillationPhaseDto).toList());
+    }
+
+    public static DistillationPlan fromDistillationPlanDto(DistillationPlanDto distillationPlanDto) {
+        return new DistillationPlan(
+                distillationPlanDto.getId(),
+                distillationPlanDto.getName(),
+                distillationPlanDto.getDescription(),
+                distillationPlanDto.distillationPhases.stream().map(DistillationPhaseDto::fromDistillationPhaseDto).toList());
+    }
 
     public Long getId() {
         return id;
@@ -50,22 +66,5 @@ public class DistillationPlanDto {
     public DistillationPlanDto setDistillationPhases(List<DistillationPhaseDto> distillationPhases) {
         this.distillationPhases = distillationPhases;
         return this;
-    }
-
-    public static DistillationPlanDto toDistillationPlanDto(DistillationPlan distillationPlan) {
-        return new DistillationPlanDto()
-                .setId(distillationPlan.getId())
-                .setName(distillationPlan.getName())
-                .setDescription(distillationPlan.getDescription())
-                .setDistillationPhases(distillationPlan.getDistillationPhases()
-                        .stream().map(DistillationPhaseDto::toDistillationPhaseDto).collect(Collectors.toList()));
-    }
-
-    public static DistillationPlan fromDistillationPlanDto(DistillationPlanDto distillationPlanDto) {
-        return new DistillationPlan(
-                distillationPlanDto.getId(),
-                distillationPlanDto.getName(),
-                distillationPlanDto.getDescription(),
-                distillationPlanDto.distillationPhases.stream().map(DistillationPhaseDto::fromDistillationPhaseDto).collect(Collectors.toList()));
     }
 }

@@ -64,7 +64,12 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic distillationProgressBackendTopic() {return TopicBuilder.name("distillation-progress-backend").build();}
+    public NewTopic distillationProgressBackendTopic() {
+        return TopicBuilder.name("distillation-progress-backend").build();
+    }
+
     @Bean
-    public NewTopic distillationProgressRaspberryTopic() {return TopicBuilder.name("distillation-progress-raspberry").build();}
+    public NewTopic distillationProgressRaspberryTopic() {
+        return TopicBuilder.name("distillation-progress-raspberry").build();
+    }
 }

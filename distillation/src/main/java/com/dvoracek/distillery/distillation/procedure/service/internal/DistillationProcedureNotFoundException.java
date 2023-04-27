@@ -2,6 +2,6 @@ package com.dvoracek.distillery.distillation.procedure.service.internal;
 
 public class DistillationProcedureNotFoundException extends RuntimeException {
     public DistillationProcedureNotFoundException(Long id) {
-        super("Procedure with an id: " + id + " wasn't found.");
+        super(String.format("Procedure with an id: %d wasn't found.", id));
     }
 }

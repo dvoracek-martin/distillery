@@ -2,7 +2,6 @@ package com.dvoracek.distillery.distillation.plan.service;
 
 import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 import com.dvoracek.distillery.distillation.plan.service.internal.CreateDistillationPlanDto;
-import com.dvoracek.distillery.distillation.plan.service.internal.DistillationPlanDto;
 import com.dvoracek.distillery.distillation.plan.service.internal.EditDistillationPlanDto;
 
 import java.util.List;

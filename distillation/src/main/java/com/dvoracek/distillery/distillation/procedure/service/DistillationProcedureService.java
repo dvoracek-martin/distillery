@@ -8,11 +8,18 @@ import java.util.List;
 public interface DistillationProcedureService {
 
     DistillationProcedure getDistillationProcedure(Long procedureId);
+
     DistillationProcedure getByPlanIdAndAttemptNumber(Long planId, int attemptNumber);
+
     DistillationProcedure getLastByPlan(Long planId);
+
     List<DistillationProcedure> getAll();
+
     DistillationProcedure createDistillationProcedure(Long planId);
-    DistillationProcedure terminateDistillationProcedure(Long procedureId);
-    DistillationProcedure deleteDistillationProcedure(Long procedureId);
+
+    void terminateDistillationProcedure(Long procedureId);
+
+    void deleteDistillationProcedure(Long procedureId);
+
     List<DistillationProcessDataFromRaspiDto> getDistillationProcedureFromES(Long procedureId);
 }

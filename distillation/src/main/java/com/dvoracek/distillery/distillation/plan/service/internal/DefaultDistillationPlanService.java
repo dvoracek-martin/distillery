@@ -3,7 +3,6 @@ package com.dvoracek.distillery.distillation.plan.service.internal;
 import com.dvoracek.distillery.distillation.phase.model.DistillationPhase;
 import com.dvoracek.distillery.distillation.phase.service.DistillationPhaseService;
 import com.dvoracek.distillery.distillation.phase.service.internal.CreateDistillationPhaseDto;
-import com.dvoracek.distillery.distillation.phase.service.internal.DistillationPhaseDto;
 import com.dvoracek.distillery.distillation.phase.service.internal.EditDistillationPhaseDto;
 import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 import com.dvoracek.distillery.distillation.plan.repository.DistillationPlanRepository;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 
@@ -24,11 +22,9 @@ import static java.util.Comparator.comparing;
 @Transactional
 public class DefaultDistillationPlanService implements DistillationPlanService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDistillationPlanService.class);
     private final DistillationPhaseService distillationPhaseService;
     private final KafkaTemplate<String, String> kafkaTemplate;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultDistillationPlanService.class);
-
     private final DistillationPlanRepository distillationPlanRepository;
 
     public DefaultDistillationPlanService(DistillationPhaseService distillationPhaseService, KafkaTemplate<String, String> kafkaTemplate, DistillationPlanRepository distillationPlanRepository) {
@@ -50,7 +46,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         DistillationPlan distillationPlan = new DistillationPlan();
         distillationPlan.setName(createDistillationPlanDto.getName());
         distillationPlan.setDescription(createDistillationPlanDto.getDescription());
-        List<DistillationPhase>distillationPhases = new ArrayList<>();
+        List<DistillationPhase> distillationPhases = new ArrayList<>();
         if (!createDistillationPlanDto.getDistillationPhases().isEmpty()) {
             for (CreateDistillationPhaseDto createDistillationPhaseDto : createDistillationPlanDto.getDistillationPhases()) {
                 DistillationPhase distillationPhase = distillationPhaseService.createDistillationPhase(createDistillationPhaseDto);
@@ -99,7 +95,7 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
                 .stream()
                 .map(it -> new
                         DistillationPhase(it.getId(), it.getName(), distillationPlan, it.getTemperature(), it.getFlow(), it.getTime())
-                ).collect(Collectors.toList());
+                ).toList();
     }
 
     @Override

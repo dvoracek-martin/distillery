@@ -14,6 +14,7 @@ public class DistillationProcessController {
     public DistillationProcessController(DistillationProcessService distillationProcessService) {
         this.distillationProcessService = distillationProcessService;
     }
+
     @MessageMapping("/distillery-backend")
     @SendTo("/topic/distillery-frontend")
     public DistillationProcessDataToFrontendDto getDistillationProcessData() {

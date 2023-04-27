@@ -2,10 +2,10 @@ filebeat.inputs:
   - type: kafka
     hosts:
       - PLAINTEXT://kafka:9092
-    topics: ["distillation-progress-raspberry"]
+    topics: [ "distillation-progress-raspberry" ]
     client_id: "filebeat"
     group_id: "filebeat"
 
 
 output.elasticsearch:
-  hosts: ["elasticsearch:9200"]
+  hosts: [ "elasticsearch:9200" ]

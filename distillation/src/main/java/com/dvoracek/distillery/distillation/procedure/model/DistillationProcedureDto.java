@@ -11,6 +11,29 @@ public class DistillationProcedureDto {
     private LocalDateTime distillationTimeEnd;
     private DistillationEndReason distillationEndReason;
 
+    public static DistillationProcedureDto toDistillationProcedureDto(DistillationProcedure distillationProcedure) {
+        return new DistillationProcedureDto()
+                .setId(distillationProcedure.getId())
+                .setDistillationPlanId(distillationProcedure.getPlanId())
+                .setDistillationPlanName(distillationProcedure.getPlanName())
+                .setAttemptNumber(distillationProcedure.getAttemptNumber())
+                .setDistillationTimeStart(distillationProcedure.getTimeStart())
+                .setDistillationTimeEnd(distillationProcedure.getTimeEnd())
+                .setDistillationEndReason(distillationProcedure.getEndReason());
+
+    }
+
+    public static DistillationProcedure fromDistillationProcedureDto(DistillationProcedureDto distillationProcedureDto) {
+        return new DistillationProcedure()
+                .setId(distillationProcedureDto.getId())
+                .setPlanId(distillationProcedureDto.getDistillationPlanId())
+                .setPlanName(distillationProcedureDto.getDistillationPlanName())
+                .setAttemptNumber(distillationProcedureDto.getAttemptNumber())
+                .setTimeStart(distillationProcedureDto.getDistillationTimeStart())
+                .setTimeEnd(distillationProcedureDto.getDistillationTimeEnd())
+                .setEndReason(distillationProcedureDto.getDistillationEndReason());
+    }
+
     public Long getId() {
         return id;
     }
@@ -72,28 +95,5 @@ public class DistillationProcedureDto {
     public DistillationProcedureDto setDistillationEndReason(DistillationEndReason distillationEndReason) {
         this.distillationEndReason = distillationEndReason;
         return this;
-    }
-
-    public static DistillationProcedureDto toDistillationProcedureDto(DistillationProcedure distillationProcedure) {
-        return new DistillationProcedureDto()
-                .setId(distillationProcedure.getId())
-                .setDistillationPlanId(distillationProcedure.getPlanId())
-                .setDistillationPlanName(distillationProcedure.getPlanName())
-                .setAttemptNumber(distillationProcedure.getAttemptNumber())
-                .setDistillationTimeStart(distillationProcedure.getTimeStart())
-                .setDistillationTimeEnd(distillationProcedure.getTimeEnd())
-                .setDistillationEndReason(distillationProcedure.getEndReason());
-
-    }
-
-    public static DistillationProcedure fromDistillationProcedureDto(DistillationProcedureDto distillationProcedureDto) {
-        return new DistillationProcedure()
-                .setId(distillationProcedureDto.getId())
-                .setPlanId(distillationProcedureDto.getDistillationPlanId())
-                .setPlanName(distillationProcedureDto.getDistillationPlanName())
-                .setAttemptNumber(distillationProcedureDto.getAttemptNumber())
-                .setTimeStart(distillationProcedureDto.getDistillationTimeStart())
-                .setTimeEnd(distillationProcedureDto.getDistillationTimeEnd())
-                .setEndReason(distillationProcedureDto.getDistillationEndReason());
     }
 }

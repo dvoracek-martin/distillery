@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 
@@ -60,7 +59,7 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
 
     @Override
     public List<DistillationProcedure> getAll() {
-        return distillationProcedureRepository.findAll().stream().sorted(comparing(DistillationProcedure::getId)).collect(Collectors.toList());
+        return distillationProcedureRepository.findAll().stream().sorted(comparing(DistillationProcedure::getId)).toList();
     }
 
     @Override
@@ -74,28 +73,25 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
         } else {
             currentDistillationProcedure.setPlanId(distillationPlan.getId()).setPlanName(distillationPlan.getName()).setTimeStart(LocalDateTime.now()).setAttemptNumber(distillationProcedure.getAttemptNumber() + 1).setEndReason(DistillationEndReason.NOT_DONE);
         }
-        LOGGER.info("Creating a new distillation procedure for plan ID: " + currentDistillationProcedure.getPlanId() + ", attempt #" + currentDistillationProcedure.getAttemptNumber());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(String.format("Creating a new distillation procedure for plan ID: %d, attempt #%d", currentDistillationProcedure.getPlanId(), currentDistillationProcedure.getAttemptNumber()));
+        }
         return distillationProcedureRepository.saveAndFlush(currentDistillationProcedure);
     }
 
-    private DistillationProcedure getDistillationProcedureByPlanId(Long planId) {
-        return distillationProcedureRepository.findByPlanId(planId);
-    }
-
     @Override
-    public DistillationProcedure terminateDistillationProcedure(Long procedureId) {
+    public void terminateDistillationProcedure(Long procedureId) {
         DistillationProcedure distillationProcedure = getDistillationProcedure(procedureId);
         distillationProcedure.setTimeEnd(LocalDateTime.now());
         distillationProcedure.setEndReason(DistillationEndReason.DONE);
-        return distillationProcedureRepository.saveAndFlush(distillationProcedure);
+        distillationProcedureRepository.saveAndFlush(distillationProcedure);
     }
 
     @Override
-    public DistillationProcedure deleteDistillationProcedure(Long procedureId) {
+    public void deleteDistillationProcedure(Long procedureId) {
         DistillationProcedure distillationProcedure = distillationProcedureRepository.findById(procedureId).orElseThrow(() -> new DistillationProcedureNotFoundException(procedureId));
         distillationProcedureRepository.delete(distillationProcedure);
         LOGGER.info("Procedure deleted. ID: {}, plan Id: {}, attempt #: {}", distillationProcedure.getId(), distillationProcedure.getPlanId(), distillationProcedure.getAttemptNumber());
-        return null;
     }
 
     @Override
@@ -110,13 +106,13 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
                                     .query(q -> q.match(t -> t
                                             .field("distillationProcedureId")
                                             .query(procedureId)))
-                                    .size(100000)
+                                    .size(10000)
                                     .sort(so -> so
                                             .field(FieldSort.of(f -> f.field("timeStartedInMillis")
-                                            .order(SortOrder.Asc)))),
+                                                    .order(SortOrder.Asc)))),
                     DistillationProcessDataFromRaspiDto.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ElasticsearchIOException();
         }
         List<DistillationProcessDataFromRaspiDto> distillationProcessDataFromRaspiDtos = new ArrayList<>();
         for (Hit<DistillationProcessDataFromRaspiDto> hit : search.hits().hits()) {

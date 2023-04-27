@@ -43,6 +43,22 @@ public class DistillationPhase {
     public DistillationPhase() {
     }
 
+    public DistillationPhase(Long id, String name, DistillationPlan plan, double temperature, double flow, Long time) {
+        this.id = id;
+        this.name = name;
+        this.plan = plan;
+        this.temperature = temperature;
+        this.flow = flow;
+        this.time = Duration.ofMinutes(time).toMillis();
+    }
+
+    public DistillationPhase(String name, double temperature, double flow, Long time) {
+        this.name = name;
+        this.temperature = temperature;
+        this.flow = flow;
+        this.time = Duration.ofMinutes(time).toMillis();
+    }
+
     public Long getId() {
         return id;
     }
@@ -107,21 +123,5 @@ public class DistillationPhase {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, plan, temperature, flow, time);
-    }
-
-    public DistillationPhase(Long id, String name, DistillationPlan plan, double temperature, double flow, Long time) {
-        this.id = id;
-        this.name = name;
-        this.plan = plan;
-        this.temperature = temperature;
-        this.flow = flow;
-        this.time = Duration.ofMinutes(time).toMillis();
-    }
-
-    public DistillationPhase(String name, double temperature, double flow, Long time) {
-        this.name = name;
-        this.temperature = temperature;
-        this.flow = flow;
-        this.time = Duration.ofMinutes(time).toMillis();
     }
 }

@@ -15,4 +15,6 @@ public interface DistillationProcessService {
     DistillationProcessDataToFrontendDto getDataForFrontend();
 
     void shallReloadDistillationPlan(boolean isDistillationPlanDirty);
+
+    void logBackendProgress(String dataFromBackend);
 }

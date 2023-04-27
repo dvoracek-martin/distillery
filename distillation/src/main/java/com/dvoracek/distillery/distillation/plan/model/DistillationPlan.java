@@ -36,16 +36,15 @@ public class DistillationPlan {
         this.distillationPhases = distillationPhases;
     }
 
+    public DistillationPlan() {
+    }
+
     public List<DistillationPhase> getDistillationPhases() {
         return distillationPhases;
     }
 
-    public DistillationPlan setDistillationPhases(List<DistillationPhase> distillationPhases) {
+    public void setDistillationPhases(List<DistillationPhase> distillationPhases) {
         this.distillationPhases = distillationPhases;
-        return this;
-    }
-
-    public DistillationPlan() {
     }
 
     public Long getId() {
@@ -70,9 +69,8 @@ public class DistillationPlan {
         return description;
     }
 
-    public DistillationPlan setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     @Override
