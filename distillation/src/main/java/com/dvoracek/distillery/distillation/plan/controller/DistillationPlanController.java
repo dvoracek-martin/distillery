@@ -96,6 +96,16 @@ public class DistillationPlanController {
         this.distillationPlanService.terminateDistillation(DistillationPlanDto.fromDistillationPlanDto(distillationPlanDto));
     }
 
+    @PostMapping("/terminate-by-user")
+    @ResponseStatus(HttpStatus.OK)
+    public void terminatePlanByUser(@RequestBody @Validated DistillationPlanDto distillationPlanDto) throws JsonProcessingException {
+        if (LOGGER.isDebugEnabled()) {
+            String distillationPlanDtoAsString = new ObjectMapper().writeValueAsString("distillationPlanDto");
+            LOGGER.debug(String.format("Received Http.POST /api/plan/terminate : %s", distillationPlanDtoAsString));
+        }
+        this.distillationPlanService.terminateDistillationByUser(DistillationPlanDto.fromDistillationPlanDto(distillationPlanDto));
+    }
+
     @PostMapping("/next")
     @ResponseStatus(HttpStatus.OK)
     public void jumpToNextPhase(@RequestBody @Validated DistillationPlanDto distillationPlanDto) {

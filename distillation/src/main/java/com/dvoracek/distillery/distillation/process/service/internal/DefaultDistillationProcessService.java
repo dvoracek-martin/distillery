@@ -96,6 +96,18 @@ public class DefaultDistillationProcessService implements DistillationProcessSer
     }
 
     @Override
+    public void terminateProcessByUser(long planId) {
+        if (!isTerminated) {
+            isTerminated = true;
+            isEnergyOn = false;
+            timeElapsedInMillis = 0;
+            timeStartedInMillis = 0;
+            currentDistillationPlan = null;
+            distillationProcedureService.terminateDistillationProcedureByUser(distillationProcedure.getId());
+        }
+    }
+
+    @Override
     public DistillationProcessDataToFrontendDto getDataForFrontend() {
         if (currentDistillationPlan == null) {
             DistillationProcessDataToFrontendDto distillationProcessDataToFrontendDto = new DistillationProcessDataToFrontendDto();

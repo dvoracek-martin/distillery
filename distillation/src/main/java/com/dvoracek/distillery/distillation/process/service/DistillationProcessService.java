@@ -11,6 +11,7 @@ public interface DistillationProcessService {
     void nextPhase();
 
     void terminateProcess(long planId);
+    void terminateProcessByUser(long planId);
 
     DistillationProcessDataToFrontendDto getDataForFrontend();
 

@@ -114,6 +114,11 @@ public class DefaultDistillationPlanService implements DistillationPlanService {
         kafkaTemplate.send("distillation-terminated", Long.toString(distillationPlan.getId()));
         LOGGER.info("Distillation terminated. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
     }
+    @Override
+    public void terminateDistillationByUser(DistillationPlan distillationPlan) {
+        kafkaTemplate.send("distillation-terminated-by-user", Long.toString(distillationPlan.getId()));
+        LOGGER.info("Distillation terminated by user. ID: {}, name: {}", distillationPlan.getId(), distillationPlan.getName());
+    }
 
     @Override
     public void jumpToNextPhase(DistillationPlan distillationPlan) {

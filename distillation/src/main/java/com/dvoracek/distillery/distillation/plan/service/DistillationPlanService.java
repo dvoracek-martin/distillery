@@ -8,18 +8,12 @@ import java.util.List;
 
 public interface DistillationPlanService {
     List<DistillationPlan> getAll();
-
     DistillationPlan createDistillationPlan(CreateDistillationPlanDto createDistillationPlanDto);
-
     void deleteDistillationPlan(Long id);
-
     DistillationPlan editPlan(Long id, EditDistillationPlanDto editDistillationPlanDto);
-
     DistillationPlan getDistillationPlan(Long id);
-
     void startDistillation(DistillationPlan distillationPlan);
-
     void terminateDistillation(DistillationPlan distillationPlan);
-
+    void terminateDistillationByUser(DistillationPlan distillationPlan);
     void jumpToNextPhase(DistillationPlan distillationPlan);
 }

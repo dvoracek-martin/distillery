@@ -88,6 +88,14 @@ public class DefaultDistillationProcedureService implements DistillationProcedur
     }
 
     @Override
+    public void terminateDistillationProcedureByUser(Long procedureId) {
+        DistillationProcedure distillationProcedure = getDistillationProcedure(procedureId);
+        distillationProcedure.setTimeEnd(LocalDateTime.now());
+        distillationProcedure.setEndReason(DistillationEndReason.TERMINATED_BY_USER);
+        distillationProcedureRepository.saveAndFlush(distillationProcedure);
+    }
+
+    @Override
     public void deleteDistillationProcedure(Long procedureId) {
         DistillationProcedure distillationProcedure = distillationProcedureRepository.findById(procedureId).orElseThrow(() -> new DistillationProcedureNotFoundException(procedureId));
         distillationProcedureRepository.delete(distillationProcedure);

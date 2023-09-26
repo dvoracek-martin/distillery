@@ -53,6 +53,11 @@ public class KafkaListeners {
         distillationProcessService.terminateProcess(Long.parseLong(data));
     }
 
+    @KafkaListener(topics = "distillation-terminated-by-user", groupId = "distillery-backend")
+    void distillationTerminatedByUserListener(String data) {
+        distillationProcessService.terminateProcessByUser(Long.parseLong(data));
+    }
+
     @KafkaListener(topics = "distillation-next-phase", groupId = "distillery-backend")
     void distillationNextPhaseListener(String data) {
         distillationProcessService.nextPhase();
