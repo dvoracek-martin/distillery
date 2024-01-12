@@ -10,7 +10,7 @@ public interface DistillationProcedureRepository extends JpaRepository<Distillat
     @Query("SELECT distillationProcedure FROM DistillationProcedure distillationProcedure WHERE distillationProcedure.planId = :planId AND distillationProcedure.attemptNumber = :attemptNumber")
     DistillationProcedure findByPlanIdAndAttemptNumber(Long planId, int attemptNumber);
 
-    @Query("SELECT distillationProcedure FROM DistillationProcedure distillationProcedure WHERE distillationProcedure.planId = :planId AND distillationProcedure.id =(SELECT MAX(id) FROM distillationProcedure)")
+    @Query(value = "SELECT distillationProcedure FROM DistillationProcedure distillationProcedure WHERE distillationProcedure.planId = :planId AND distillationProcedure.id = (SELECT MAX(id) FROM distillationProcedure", nativeQuery = true)
     DistillationProcedure findLastByPlan(Long planId);
 
     @Query("SELECT distillationProcedure FROM DistillationProcedure distillationProcedure WHERE distillationProcedure.planId = :planId")

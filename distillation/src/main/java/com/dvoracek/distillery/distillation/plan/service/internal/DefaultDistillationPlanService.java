@@ -7,12 +7,12 @@ import com.dvoracek.distillery.distillation.phase.service.internal.EditDistillat
 import com.dvoracek.distillery.distillation.plan.model.DistillationPlan;
 import com.dvoracek.distillery.distillation.plan.repository.DistillationPlanRepository;
 import com.dvoracek.distillery.distillation.plan.service.DistillationPlanService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 

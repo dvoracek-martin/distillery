@@ -15,13 +15,13 @@ import com.dvoracek.distillery.distillation.procedure.model.DistillationProcedur
 import com.dvoracek.distillery.distillation.procedure.repository.DistillationProcedureRepository;
 import com.dvoracek.distillery.distillation.procedure.service.DistillationProcedureService;
 import com.dvoracek.distillery.distillation.process.service.internal.DistillationProcessDataFromRaspiDto;
+import jakarta.transaction.Transactional;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -3,11 +3,10 @@ package com.dvoracek.distillery.distillation.phase.service.internal;
 import com.dvoracek.distillery.distillation.phase.model.DistillationPhase;
 import com.dvoracek.distillery.distillation.phase.repository.DistillationPhaseRepository;
 import com.dvoracek.distillery.distillation.phase.service.DistillationPhaseService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 
 @Service
 @Transactional
